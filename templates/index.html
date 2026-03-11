@@ -570,6 +570,9 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
     }
 };
 
+// ─── EMAILJS INIT ─────────────────────────────────────────────
+emailjs.init("kh1UnqHfrV4absJsi");
+
 // ─── CONTACT FORM ─────────────────────────────────────────────
 async function submitContactForm() {
     const name    = document.getElementById('contact-name').value.trim();
@@ -587,13 +590,29 @@ async function submitContactForm() {
     status.innerText = 'Sending...';
 
     try {
-        emailjs.init("kh1UnqHfrV4absJsi");
+        // Send notification to academy
         await emailjs.send("service_bez11ei", "template_yv39cxm", {
             name:    name,
             email:   email,
             message: message,
             title:   "Mentor Request - Elite Dance Academy"
         });
+
+        // Send confirmation to user
+        await emailjs.send("service_bez11ei", "template_yv39cxm", {
+            name:    name,
+            email:   email,
+            message: "Hi " + name + ",
+
+Thank you for contacting Elite Dance Academy.
+
+A mentor will contact you soon.
+
+Regards,
+Elite Dance Academy",
+            title:   "We received your mentor request"
+        });
+
         status.style.color = '#00f2ff';
         status.innerText = '✅ Message sent! A mentor will contact you soon.';
         document.getElementById('contact-name').value    = '';
