@@ -12,7 +12,7 @@ SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdX
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 EMAIL_SENDER   = "srisrimehernayana@gmail.com"
-EMAIL_PASSWORD = "fdgm ladm gyqp sbcl"
+EMAIL_PASSWORD = "qadk keua oubt zfgv"
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 CORS(app, resources={r"/*": {"origins": "*"}})
