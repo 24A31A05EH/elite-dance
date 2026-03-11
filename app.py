@@ -18,7 +18,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 # EMAIL CONFIG
 # -----------------------------
 EMAIL_SENDER = "srisrimehernayana@gmail.com"
-EMAIL_PASSWORD = "fdgm ladm gyqp sbcl"
+EMAIL_PASSWORD = "fqbl lcbl koab nrlf"
 
 # -----------------------------
 # FLASK APP
