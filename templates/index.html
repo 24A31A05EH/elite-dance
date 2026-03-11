@@ -570,8 +570,12 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
     }
 };
 
-// ─── EMAILJS INIT ─────────────────────────────────────────────
-emailjs.init("kh1UnqHfrV4absJsi");
+// ─── EMAILJS INIT (after page loads) ─────────────────────────
+window.addEventListener('load', function() {
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init("kh1UnqHfrV4absJsi");
+    }
+});
 
 // ─── CONTACT FORM ─────────────────────────────────────────────
 async function submitContactForm() {
