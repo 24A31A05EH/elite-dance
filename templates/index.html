@@ -602,14 +602,7 @@ async function submitContactForm() {
         await emailjs.send("service_bez11ei", "template_yv39cxm", {
             name:    name,
             email:   email,
-            message: "Hi " + name + ",
-
-Thank you for contacting Elite Dance Academy.
-
-A mentor will contact you soon.
-
-Regards,
-Elite Dance Academy",
+            message: "Hi " + name + ",\n\nThank you for contacting Elite Dance Academy.\n\nA mentor will contact you soon.\n\nRegards,\nElite Dance Academy",
             title:   "We received your mentor request"
         });
 
