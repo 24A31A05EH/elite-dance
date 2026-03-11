@@ -18,7 +18,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 # EMAIL CONFIG
 # -----------------------------
 EMAIL_SENDER = "srisrimehernayana@gmail.com"
-EMAIL_PASSWORD = "fqbl lcbl koab nrlf"
+EMAIL_PASSWORD = "fdgm ladm gyqp sbcl"
 
 # -----------------------------
 # FLASK APP
@@ -126,8 +126,6 @@ def enroll():
             "experience_level": data.get("experience_level"),
             "user_id": user.id
         }).execute()
-
-        send_thank_you_email(data.get("email"), data.get("name"), data.get("dance_style"))
 
         return jsonify({"message": "Enrollment successful!", "data": response.data}), 201
 
