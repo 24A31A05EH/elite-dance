@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root { --neon-pink: #ff007f; --neon-cyan: #00f2ff; --dark-bg: #050505; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -556,6 +555,16 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
         });
         const result = await res.json();
         if (res.ok) {
+            // Send welcome email to student
+            try {
+                await emailjs.send("service_bez11ei", "template_14j6mra", {
+                    user_name:   payload.name,
+                    user_email:  payload.email,
+                    dance_style: payload.dance_style
+                });
+            } catch(emailErr) {
+                console.error("Email error:", emailErr);
+            }
             msg.style.color = '#00f2ff';
             msg.innerText = 'Welcome to the Academy! 🎉';
             setTimeout(() => { document.getElementById('enrollmentForm').reset(); msg.innerText = ''; closeEnroll(); }, 3000);
@@ -571,21 +580,7 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
 };
 
 // ─── EMAILJS INIT ────────────────────────────────────────────
-(function(){
-    function initEmailJS() {
-        if (typeof emailjs !== 'undefined') {
-            emailjs.init("kh1UnqHfrV4absJsi");
-            console.log("EmailJS initialized successfully");
-        } else {
-            console.error("EmailJS not loaded!");
-        }
-    }
-    if (document.readyState === 'complete') {
-        initEmailJS();
-    } else {
-        window.addEventListener('load', initEmailJS);
-    }
-})();
+emailjs.init("kh1UnqHfrV4absJsi");
 
 // ─── CONTACT FORM ─────────────────────────────────────────────
 async function submitContactForm() {
@@ -642,5 +637,6 @@ document.getElementById('enroll-modal').addEventListener('click', function(e) {
     if (e.target === this) closeEnroll();
 });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </body>
 </html>
