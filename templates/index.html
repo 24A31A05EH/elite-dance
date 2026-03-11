@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Elite Dance Academy | Passion & Performance</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -557,6 +558,7 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
         if (res.ok) {
             // Send welcome email to student
             try {
+                if (typeof emailjs !== 'undefined') emailjs.init("kh1UnqHfrV4absJsi");
                 await emailjs.send("service_bez11ei", "template_14j6mra", {
                     user_name:   payload.name,
                     user_email:  payload.email,
@@ -579,8 +581,7 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
     }
 };
 
-// ─── EMAILJS INIT ────────────────────────────────────────────
-emailjs.init("kh1UnqHfrV4absJsi");
+
 
 // ─── CONTACT FORM ─────────────────────────────────────────────
 async function submitContactForm() {
@@ -599,6 +600,8 @@ async function submitContactForm() {
     status.innerText = 'Sending...';
 
     try {
+        // Init emailjs
+        if (typeof emailjs !== 'undefined') emailjs.init("kh1UnqHfrV4absJsi");
         // Send notification to academy
         const r1 = await emailjs.send("service_bez11ei", "template_yv39cxm", {
             name:    name,
@@ -637,6 +640,5 @@ document.getElementById('enroll-modal').addEventListener('click', function(e) {
     if (e.target === this) closeEnroll();
 });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </body>
 </html>
