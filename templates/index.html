@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root { --neon-pink: #ff007f; --neon-cyan: #00f2ff; --dark-bg: #050505; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -306,7 +307,7 @@
     <div id="detail-modal-bg" class="absolute inset-0 z-0" style="background-size:cover;background-position:center;">
         <div class="absolute inset-0" style="background:rgba(0,0,0,0.6);"></div>
     </div>
-    <div class="relative z-10 bg-black/20 backdrop-blur-sm w-full max-w-2xl p-8 md:p-10 rounded-[2rem] border border-white/10 shadow-2xl animate__animated animate__fadeInUp">
+    <div class="relative z-10 bg-black/30 backdrop-blur-md w-full max-w-2xl p-6 md:p-10 rounded-t-[2rem] md:rounded-[2rem] border border-white/10 shadow-2xl animate__animated animate__fadeInUp max-h-[90vh] overflow-y-auto">
         <button onclick="closeDetails()" class="absolute top-4 right-5 text-gray-400 hover:text-white transition min-h-0 w-8 h-8">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -575,30 +576,33 @@ async function submitContactForm() {
     const email   = document.getElementById('contact-email').value.trim();
     const message = document.getElementById('contact-message').value.trim();
     const status  = document.getElementById('contact-status');
+
     if (!name || !email || !message) {
         status.style.color = 'red';
         status.innerText = 'Please fill in all fields.';
         return;
     }
+
     status.style.color = '#aaa';
     status.innerText = 'Sending...';
+
     try {
-        const res = await fetch('/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, message })
+        emailjs.init("kh1UnqHfrV4absJsi");
+        await emailjs.send("service_bez11ei", "template_yv39cxm", {
+            name:    name,
+            email:   email,
+            message: message,
+            title:   "Mentor Request - Elite Dance Academy"
         });
-        const result = await res.json();
-        if (res.ok) {
-            status.style.color = '#00f2ff';
-            status.innerText = '✅ Message sent! A mentor will contact you soon.';
-        } else {
-            status.style.color = 'red';
-            status.innerText = result.error || 'Failed to send.';
-        }
+        status.style.color = '#00f2ff';
+        status.innerText = '✅ Message sent! A mentor will contact you soon.';
+        document.getElementById('contact-name').value    = '';
+        document.getElementById('contact-email').value   = '';
+        document.getElementById('contact-message').value = '';
     } catch (err) {
+        console.error(err);
         status.style.color = 'red';
-        status.innerText = 'Server error. Try again.';
+        status.innerText = 'Failed to send. Try again.';
     }
 }
 
