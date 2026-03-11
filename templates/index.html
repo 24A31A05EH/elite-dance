@@ -307,7 +307,7 @@
     <div id="detail-modal-bg" class="absolute inset-0 z-0" style="background-size:cover;background-position:center;">
         <div class="absolute inset-0" style="background:rgba(0,0,0,0.6);"></div>
     </div>
-    <div class="relative z-10 bg-black/20 backdrop-blur-sm w-full max-w-2xl p-8 md:p-10 rounded-[2rem] border border-white/10 shadow-2xl animate__animated animate__fadeInUp">
+    <div class="relative z-10 bg-black/30 backdrop-blur-md w-full max-w-2xl p-6 md:p-10 rounded-t-[2rem] md:rounded-[2rem] border border-white/10 shadow-2xl animate__animated animate__fadeInUp max-h-[90vh] overflow-y-auto">
         <button onclick="closeDetails()" class="absolute top-4 right-5 text-gray-400 hover:text-white transition min-h-0 w-8 h-8">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -570,12 +570,22 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
     }
 };
 
-// ─── EMAILJS INIT (after page loads) ─────────────────────────
-window.addEventListener('load', function() {
-    if (typeof emailjs !== 'undefined') {
-        emailjs.init("kh1UnqHfrV4absJsi");
+// ─── EMAILJS INIT ────────────────────────────────────────────
+(function(){
+    function initEmailJS() {
+        if (typeof emailjs !== 'undefined') {
+            emailjs.init("kh1UnqHfrV4absJsi");
+            console.log("EmailJS initialized successfully");
+        } else {
+            console.error("EmailJS not loaded!");
+        }
     }
-});
+    if (document.readyState === 'complete') {
+        initEmailJS();
+    } else {
+        window.addEventListener('load', initEmailJS);
+    }
+})();
 
 // ─── CONTACT FORM ─────────────────────────────────────────────
 async function submitContactForm() {
@@ -595,20 +605,22 @@ async function submitContactForm() {
 
     try {
         // Send notification to academy
-        await emailjs.send("service_bez11ei", "template_yv39cxm", {
+        const r1 = await emailjs.send("service_bez11ei", "template_yv39cxm", {
             name:    name,
-            email:   email,
-            message: message,
-            title:   "Mentor Request - Elite Dance Academy"
+            email:   "srisrimehernayana@gmail.com",
+            message: "Name: " + name + "\nEmail: " + email + "\n\nMessage:\n" + message,
+            title:   "Mentor Request from " + name
         });
+        console.log("Academy email sent:", r1);
 
         // Send confirmation to user
-        await emailjs.send("service_bez11ei", "template_yv39cxm", {
+        const r2 = await emailjs.send("service_bez11ei", "template_yv39cxm", {
             name:    name,
             email:   email,
             message: "Hi " + name + ",\n\nThank you for contacting Elite Dance Academy.\n\nA mentor will contact you soon.\n\nRegards,\nElite Dance Academy",
             title:   "We received your mentor request"
         });
+        console.log("User email sent:", r2);
 
         status.style.color = '#00f2ff';
         status.innerText = '✅ Message sent! A mentor will contact you soon.';
@@ -616,7 +628,7 @@ async function submitContactForm() {
         document.getElementById('contact-email').value   = '';
         document.getElementById('contact-message').value = '';
     } catch (err) {
-        console.error(err);
+        console.error("EmailJS error:", err);
         status.style.color = 'red';
         status.innerText = 'Failed to send. Try again.';
     }
