@@ -605,29 +605,24 @@ async function submitContactForm() {
     status.innerText = 'Sending...';
 
     try {
-        const res = await fetch('https://formsubmit.co/ajax/srisrimehernayana@gmail.com', {
+        await fetch('https://formsubmit.co/ajax/srisrimehernayana@gmail.com', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({
-                name:    name,
-                email:   email,
-                message: message,
+                name:     name,
+                email:    email,
+                message:  message,
                 _subject: 'Mentor Request from ' + name + ' - Elite Dance Academy',
                 _replyto: email,
-                _captcha: 'false'
+                _captcha: 'false',
+                _template: 'box'
             })
         });
-        const result = await res.json();
-        if (result.success === 'true' || result.success === true) {
-            status.style.color = '#00f2ff';
-            status.innerText = '✅ Message sent! A mentor will contact you soon.';
-            document.getElementById('contact-name').value    = '';
-            document.getElementById('contact-email').value   = '';
-            document.getElementById('contact-message').value = '';
-        } else {
-            status.style.color = 'red';
-            status.innerText = 'Failed to send. Try again.';
-        }
+        status.style.color = '#00f2ff';
+        status.innerText = '✅ Message sent! A mentor will contact you soon.';
+        document.getElementById('contact-name').value    = '';
+        document.getElementById('contact-email').value   = '';
+        document.getElementById('contact-message').value = '';
     } catch (err) {
         console.error("Contact form error:", err);
         status.style.color = 'red';
