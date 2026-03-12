@@ -18,7 +18,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 # -----------------------
 GMAIL_USER     = os.getenv("GMAIL_USER")      # srisrimehernayana@gmail.com
 GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD")  # 16-char App Password from Google
-ACADEMY_EMAIL  = GMAIL_USER                   # replies come back to you
+ACADEMY_EMAIL  = GMAIL_USER
 
 # -----------------------
 # Debug on startup
@@ -64,7 +64,7 @@ def send_email(to, subject, body):
         return True
 
     except smtplib.SMTPAuthenticationError:
-        print("❌ Gmail auth failed — make sure you're using an App Password, not your Gmail login password.")
+        print("❌ Gmail auth failed — use an App Password, not your Gmail login password.")
         return False
     except Exception as e:
         print(f"❌ Email failed: {e}")
@@ -138,41 +138,36 @@ def enroll():
     # --- Email to Student ---
     student_email_sent = send_email(
         to      = data.get("email"),
-        subject = "Welcome to Elite Dance Academy!",
-        body    = f"""Hello {data.get("name")},
+        subject = "🎉 Welcome to Elite Dance Academy!",
+        body    = f"""Hi {data.get("name")},
 
-Thank you for enrolling at Elite Dance Academy!
+Thank you for enrolling in the {data.get("dance_style")} class at Elite Dance Academy!
 
-Your Enrollment Details:
-━━━━━━━━━━━━━━━━━━━━━━━━
-Dance Style     : {data.get("dance_style")}
-Experience Level: {data.get("experience_level")}
-━━━━━━━━━━━━━━━━━━━━━━━━
+We're excited to have you join our dance family 💃
 
 Our team will contact you soon with class schedules and next steps.
 
-Keep dancing!
-Elite Dance Academy
-📍 101 Elite Plaza, Bandra West, Mumbai
-📞 +91 90000 12345
-"""
+Keep Dancing!
+
+Elite Dance Academy"""
     )
 
     # --- Email to Academy ---
     academy_email_sent = send_email(
         to      = ACADEMY_EMAIL,
         subject = f"New Enrollment - {data.get('name')} ({data.get('dance_style')})",
-        body    = f"""New student enrolled!
+        body    = f"""Hi,
 
-━━━━━━━━━━━━━━━━━━━━━━━━
-Name            : {data.get("name")}
-Email           : {data.get("email")}
-Phone           : {data.get("phone")}
-Age             : {data.get("age") or "Not provided"}
+New student enrolled!
+
+Name      : {data.get("name")}
+Email     : {data.get("email")}
+Phone     : {data.get("phone")}
+Age       : {data.get("age") or "Not provided"}
 Dance Style     : {data.get("dance_style")}
 Experience Level: {data.get("experience_level")}
-━━━━━━━━━━━━━━━━━━━━━━━━
-"""
+
+Elite Dance Academy"""
     )
 
     return jsonify({
@@ -199,15 +194,17 @@ def contact():
     send_email(
         to      = ACADEMY_EMAIL,
         subject = f"Mentor Request - {name}",
-        body    = f"""New mentor request received!
+        body    = f"""Hi,
 
-━━━━━━━━━━━━━━━━━━━━━━━━
+New mentor request received!
+
 Name   : {name}
 Email  : {email}
-━━━━━━━━━━━━━━━━━━━━━━━━
+
 Message:
 {message}
-"""
+
+Elite Dance Academy"""
     )
 
     return jsonify({"message": "Request sent successfully"}), 200
