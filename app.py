@@ -9,7 +9,7 @@ SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdX
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 RESEND_API_KEY = "re_2Cuw6HLd_DNg81QMcsJXbX3xmVaWTd13Z"
-EMAIL_FROM     = "onboarding@resend.dev"
+EMAIL_FROM = "Elite Dance Academy <onboarding@resend.dev>"
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -26,7 +26,8 @@ def send_email(to, subject, body):
                 "from": EMAIL_FROM,
                 "to": [to],
                 "subject": subject,
-                "text": body
+                "text": body,
+                "reply_to": "srisrimehernayana@gmail.com"
             }
         )
         print(f"Resend response: {response.status_code} {response.text}")
