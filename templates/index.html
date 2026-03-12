@@ -635,6 +635,33 @@ document.getElementById('detail-modal').addEventListener('click', function(e) {
 document.getElementById('enroll-modal').addEventListener('click', function(e) {
     if (e.target === this) closeEnroll();
 });
+    <script>
+document.getElementById("enrollForm").addEventListener("submit", async function(e){
+
+    e.preventDefault();   // stops the submit page
+
+    const formData = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        age: document.getElementById("age").value,
+        dance_style: document.getElementById("dance_style").value,
+        experience_level: document.getElementById("experience_level").value
+    };
+
+    const response = await fetch("/enroll", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+    });
+
+    const result = await response.json();
+
+    alert(result.message);
+});
+</script>
 </script>
 </body>
 </html>
