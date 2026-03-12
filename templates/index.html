@@ -34,7 +34,7 @@
             border: 1px solid rgba(255,255,255,0.1) !important;
             color: white !important;
             width: 100%;
-            font-size: 16px !important; /* Prevents iOS zoom on focus */
+            font-size: 16px !important;
             -webkit-appearance: none;
         }
         select option { background: #121217; color: white; }
@@ -47,48 +47,25 @@
         #user-display { display: flex; align-items: center; gap: 8px; }
         #user-name { font-size: 11px; font-weight: 700; color: #00f2ff; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* Mobile menu */
         #mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 60; background: rgba(5,5,5,0.98); flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
         #mobile-menu.open { display: flex; }
         .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; }
         .hamburger span { display: block; width: 24px; height: 2px; background: white; transition: 0.3s; border-radius: 2px; }
         @media (max-width: 767px) { .hamburger { display: flex; } }
 
-        /* Auth gate */
         #auth-gate { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.96); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 16px; }
         #auth-gate.hidden { display: none; }
 
-        /* Modals */
-        #detail-modal, #enroll-modal {
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        #detail-modal .relative.z-10 {
-            margin: auto;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        #enroll-modal > div {
-            max-height: 90vh;
-            overflow-y: auto;
-        }
+        #detail-modal, #enroll-modal { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #detail-modal .relative.z-10 { margin: auto; max-height: 90vh; overflow-y: auto; }
+        #enroll-modal > div { max-height: 90vh; overflow-y: auto; }
 
-        /* Smooth scrolling for mobile */
         html { scroll-behavior: smooth; }
-
-        /* Better touch targets */
         button, a { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
         nav a { min-height: auto; display: inline; }
 
-        /* Stats grid mobile */
-        @media (max-width: 640px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-        }
-
-        /* Hero text responsive */
-        @media (max-width: 480px) {
-            .hero-title { font-size: 3.5rem !important; }
-        }
+        @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 480px) { .hero-title { font-size: 3.5rem !important; } }
     </style>
 </head>
 <body>
@@ -118,14 +95,12 @@
 <!-- NAV -->
 <nav class="fixed w-full z-50 glass px-4 md:px-6 py-3 flex justify-between items-center">
     <h1 class="text-xl md:text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-cyan-400">ELITE DANCE</h1>
-    
     <div class="hidden md:flex space-x-8 font-bold text-xs uppercase tracking-widest">
         <a href="#about" class="hover:text-cyan-400 transition min-h-0">About</a>
         <a href="#courses" class="hover:text-cyan-400 transition min-h-0">Classes</a>
         <a href="#testimonials" class="hover:text-cyan-400 transition min-h-0">Reviews</a>
         <a href="#contact" class="hover:text-cyan-400 transition min-h-0">Contact</a>
     </div>
-
     <div class="flex items-center gap-3">
         <div id="auth-area">
             <div id="login-btn-wrap">
@@ -140,7 +115,6 @@
                 <button onclick="signOut()" class="text-[10px] text-gray-500 hover:text-red-400 transition font-bold uppercase min-h-0">Out</button>
             </div>
         </div>
-        <!-- Hamburger -->
         <div class="hamburger md:hidden" onclick="toggleMenu()">
             <span></span><span></span><span></span>
         </div>
@@ -196,7 +170,6 @@
     </div>
     <div class="overflow-hidden mb-6">
         <div class="marquee-track">
-            <!-- Row 1 -->
             <div class="glass p-5 rounded-2xl border-l-4 border-pink-500 space-y-3" style="width:280px;flex-shrink:0;">
                 <div class="text-yellow-400 text-xs">★★★★★</div>
                 <p class="text-gray-300 text-xs leading-relaxed italic">"Elite Dance completely transformed me. The Bharatanatyam training is unmatched in the city."</p>
@@ -260,7 +233,6 @@
             </div>
         </div>
     </div>
-
     <div class="max-w-7xl mx-auto px-4 md:px-6">
         <div class="mt-12 glass rounded-3xl p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-5 text-center stats-grid">
             <div><h4 class="text-2xl md:text-3xl font-black text-cyan-400">5,000+</h4><p class="text-[10px] uppercase text-gray-500 mt-1 tracking-widest">Students Trained</p></div>
@@ -373,7 +345,6 @@ function toggleMenu() {
     document.getElementById('mobile-menu').classList.toggle('open');
 }
 
-// Smooth scroll for all anchor links
 document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', function(e) {
         e.preventDefault();
@@ -531,14 +502,17 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
     e.preventDefault();
     const msg = document.getElementById('status-msg');
     const { data: { session } } = await supabaseClient.auth.getSession();
+
     if (!session) {
         msg.style.color = 'red';
         msg.innerText = 'Session expired. Please sign in again.';
         setTimeout(() => { closeEnroll(); document.getElementById('auth-gate').classList.remove('hidden'); }, 1500);
         return;
     }
+
     msg.style.color = '#aaa';
     msg.innerText = 'Processing...';
+
     const payload = {
         name:             document.getElementById('name').value,
         email:            document.getElementById('email').value,
@@ -547,19 +521,28 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
         dance_style:      document.getElementById('dance_style').value,
         experience_level: document.getElementById('experience_level').value
     };
+
     try {
         const res = await fetch('/enroll', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`
+            },
             body: JSON.stringify(payload)
         });
+
         const result = await res.json();
-      if (res.ok) {
-           msg.style.color = '#00f2ff';
-           msg.innerText = 'Welcome to the Academy! 🎉';
-           setTimeout(() => { document.getElementById('enrollmentForm').reset(); msg.innerText = ''; closeEnroll(); }, 3000);
-     }
-     else {
+
+        if (res.ok) {
+            msg.style.color = '#00f2ff';
+            msg.innerText = '🎉 Welcome to the Academy! Check your email for confirmation.';
+            setTimeout(() => {
+                document.getElementById('enrollmentForm').reset();
+                msg.innerText = '';
+                closeEnroll();
+            }, 3500);
+        } else {
             msg.style.color = 'red';
             msg.innerText = result.error || 'Submission failed. Please try again.';
         }
@@ -569,8 +552,6 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
         msg.innerText = 'Server error. Try again.';
     }
 };
-
-
 
 // ─── CONTACT FORM ─────────────────────────────────────────────
 async function submitContactForm() {
@@ -612,7 +593,7 @@ async function submitContactForm() {
     }
 }
 
-// Close modals on backdrop tap (mobile friendly)
+// Close modals on backdrop tap
 document.getElementById('detail-modal').addEventListener('click', function(e) {
     if (e.target === this) closeDetails();
 });
