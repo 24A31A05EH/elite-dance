@@ -5,17 +5,17 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 
-# -------------------------
+# -----------------------
 # Supabase Configuration
-# -------------------------
+# -----------------------
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_KEY")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
-# -------------------------
-# Email Configuration (Brevo SMTP)
-# -------------------------
+# -----------------------
+# Email Configuration
+# -----------------------
 SMTP_SERVER = os.getenv("BREVO_SMTP_SERVER")
 SMTP_PORT = int(os.getenv("BREVO_SMTP_PORT"))
 SMTP_EMAIL = os.getenv("BREVO_EMAIL")
@@ -23,12 +23,16 @@ SMTP_PASSWORD = os.getenv("BREVO_PASSWORD")
 
 ACADEMY_EMAIL = "srisrimehernayana@gmail.com"
 
+# -----------------------
+# Flask Setup
+# -----------------------
 app = Flask(__name__, template_folder="templates", static_folder="static")
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# -------------------------
-# Email Sending Function
-# -------------------------
+
+# -----------------------
+# Email Function
+# -----------------------
 def send_email(to, subject, body):
     try:
         msg = MIMEText(body)
@@ -39,6 +43,7 @@ def send_email(to, subject, body):
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
         server.starttls()
         server.login(SMTP_EMAIL, SMTP_PASSWORD)
+
         server.sendmail(SMTP_EMAIL, to, msg.as_string())
         server.quit()
 
@@ -50,17 +55,17 @@ def send_email(to, subject, body):
         return False
 
 
-# -------------------------
-# Home Page
-# -------------------------
+# -----------------------
+# Home Route
+# -----------------------
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# -------------------------
-# Test Supabase
-# -------------------------
+# -----------------------
+# Supabase Test
+# -----------------------
 @app.route("/test-supabase")
 def test_supabase():
     try:
@@ -70,9 +75,9 @@ def test_supabase():
         return jsonify({"connected": False, "error": str(e)})
 
 
-# -------------------------
-# Enrollment API
-# -------------------------
+# -----------------------
+# Enrollment Route
+# -----------------------
 @app.route("/enroll", methods=["POST"])
 def enroll():
 
@@ -118,7 +123,7 @@ def enroll():
         }).execute()
 
 
-        # Email to student
+        # Email to Student
         send_email(
             data.get("email"),
             "Welcome to Elite Dance Academy",
@@ -137,7 +142,7 @@ Elite Dance Academy
         )
 
 
-        # Email to academy
+        # Email to Academy
         send_email(
             ACADEMY_EMAIL,
             f"New Enrollment - {data.get('name')}",
@@ -148,7 +153,7 @@ Name: {data.get("name")}
 Email: {data.get("email")}
 Phone: {data.get("phone")}
 Dance Style: {data.get("dance_style")}
-Experience: {data.get("experience_level")}
+Experience Level: {data.get("experience_level")}
 """
         )
 
@@ -160,9 +165,9 @@ Experience: {data.get("experience_level")}
         return jsonify({"error": str(e)}), 500
 
 
-# -------------------------
-# Contact API
-# -------------------------
+# -----------------------
+# Contact Route
+# -----------------------
 @app.route("/contact", methods=["POST"])
 def contact():
 
@@ -189,11 +194,9 @@ Message:
     return jsonify({"message": "Request sent"}), 200
 
 
-# -------------------------
-# Run Server
-# -------------------------
+# -----------------------
+# Run App
+# -----------------------
 if __name__ == "__main__":
-
     port = int(os.environ.get("PORT", 5000))
-
     app.run(host="0.0.0.0", port=port, debug=False)
