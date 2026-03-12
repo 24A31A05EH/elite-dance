@@ -1,45 +1,44 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from supabase import create_client
-import smtplib
-import ssl
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 import os
+import requests
 
 SUPABASE_URL = "https://yhvnbwwxlkbccishcuue.supabase.co"
 SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlodm5id3d4bGtiY2Npc2hjdXVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjYyMjI4OSwiZXhwIjoyMDg4MTk4Mjg5fQ.iVN3SPzhegXnZHmRJCnPX4paKPIyFxzsemlxae2BSgs"
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
-# Resend SMTP config
-SMTP_HOST     = "smtp.resend.com"
-SMTP_PORT     = 465
-SMTP_USER     = "resend"
-SMTP_PASSWORD = "re_2Cuw6HLd_DNg81QMcsJXbX3xmVaWTd13Z"
-EMAIL_FROM    = "Elite Dance Academy <onboarding@resend.dev>"
-ACADEMY_EMAIL = "srisrimehernayana@gmail.com"
+RESEND_API_KEY = "re_2Cuw6HLd_DNg81QMcsJXbX3xmVaWTd13Z"
+ACADEMY_EMAIL  = "srisrimehernayana@gmail.com"
+EMAIL_FROM     = "Elite Dance Academy <onboarding@resend.dev>"
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 def send_email(to, subject, body):
     try:
-        msg = MIMEMultipart()
-        msg["From"]    = EMAIL_FROM
-        msg["To"]      = to
-        msg["Subject"] = subject
-        msg["Reply-To"] = ACADEMY_EMAIL
-        msg.attach(MIMEText(body, "plain"))
-
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, context=context) as server:
-            server.login(SMTP_USER, SMTP_PASSWORD)
-            server.sendmail(EMAIL_FROM, to, msg.as_string())
-
-        print(f"✅ Email sent to {to}")
-        return True
+        # On free plan, Resend only allows sending to verified email
+        # So we send to academy email with student info
+        actual_to = ACADEMY_EMAIL if to != ACADEMY_EMAIL else ACADEMY_EMAIL
+        
+        response = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {RESEND_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "from":     EMAIL_FROM,
+                "to":       [actual_to],
+                "subject":  subject,
+                "text":     body,
+                "reply_to": ACADEMY_EMAIL
+            }
+        )
+        print(f"Resend: {response.status_code} | to: {actual_to} | {response.text}")
+        return response.status_code == 200
     except Exception as e:
-        print(f"❌ Email failed: {e}")
+        print(f"Email failed: {e}")
         return False
 
 @app.route("/")
@@ -90,11 +89,11 @@ def enroll():
             "user_id":          user.id
         }).execute()
 
-        # Send welcome email to student
+        # Send to academy with student details
         send_email(
-            to      = data.get("email"),
-            subject = "🎉 Welcome to Elite Dance Academy!",
-            body    = f"Hi {data.get('name')},\n\nThank you for enrolling in the {data.get('dance_style')} class at Elite Dance Academy!\n\nWe're excited to have you join our dance family 💃\n\nOur team will contact you soon with class schedules and next steps.\n\nKeep Dancing!\n\nElite Dance Academy"
+            to      = ACADEMY_EMAIL,
+            subject = f"New Enrollment - {data.get('name')} - {data.get('dance_style')}",
+            body    = f"Hi,\n\nNew student enrolled!\n\nName: {data.get('name')}\nEmail: {data.get('email')}\nPhone: {data.get('phone')}\nDance Style: {data.get('dance_style')}\nExperience: {data.get('experience_level')}\n\nPlease send welcome email to the student.\n\nElite Dance Academy"
         )
 
         return jsonify({"message": "Enrollment successful!", "data": response.data}), 201
@@ -108,12 +107,13 @@ def contact():
     data    = request.get_json()
     name    = data.get("name")
     email   = data.get("email")
+    message = data.get("message")
 
-    # Send confirmation to user
+    # Send to academy with user details
     send_email(
-        to      = email,
-        subject = "We received your mentor request",
-        body    = f"Hi {name},\n\nThank you for contacting Elite Dance Academy.\n\nA mentor will contact you soon.\n\nRegards,\nElite Dance Academy"
+        to      = ACADEMY_EMAIL,
+        subject = f"Mentor Request - {name}",
+        body    = f"Hi,\n\nNew mentor request received!\n\nName: {name}\nEmail: {email}\n\nMessage:\n{message}\n\nPlease contact this person soon.\n\nElite Dance Academy"
     )
 
     return jsonify({"message": "Request sent"}), 200
