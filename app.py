@@ -8,32 +8,27 @@ from email.mime.text import MIMEText
 # -----------------------
 # Supabase Configuration
 # -----------------------
-SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_URL              = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_KEY")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 # -----------------------
-# Email Configuration
+# Gmail Configuration
 # -----------------------
-SMTP_SERVER   = os.getenv("BREVO_SMTP_SERVER", "smtp-relay.brevo.com")
-SMTP_PORT     = int(os.getenv("BREVO_SMTP_PORT", "587"))
-SMTP_EMAIL    = os.getenv("BREVO_EMAIL")
-SMTP_PASSWORD = os.getenv("BREVO_PASSWORD")
-
-ACADEMY_EMAIL = "srisrimehernayana@gmail.com"
+GMAIL_USER     = os.getenv("GMAIL_USER")      # srisrimehernayana@gmail.com
+GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD")  # 16-char App Password from Google
+ACADEMY_EMAIL  = GMAIL_USER                   # replies come back to you
 
 # -----------------------
-# Debug: Print env status on startup
+# Debug on startup
 # -----------------------
 print("=" * 40)
-print("BREVO CONFIG CHECK:")
-print(f"  SMTP_SERVER : {SMTP_SERVER}")
-print(f"  SMTP_PORT   : {SMTP_PORT}")
-print(f"  SMTP_EMAIL  : {SMTP_EMAIL}")
-print(f"  SMTP_PASSWORD: {'SET ✅' if SMTP_PASSWORD else 'MISSING ❌'}")
-print(f"  SUPABASE_URL: {'SET ✅' if SUPABASE_URL else 'MISSING ❌'}")
-print(f"  SUPABASE_KEY: {'SET ✅' if SUPABASE_SERVICE_ROLE_KEY else 'MISSING ❌'}")
+print("CONFIG CHECK:")
+print(f"  GMAIL_USER     : {GMAIL_USER or 'MISSING ❌'}")
+print(f"  GMAIL_PASSWORD : {'SET ✅' if GMAIL_PASSWORD else 'MISSING ❌'}")
+print(f"  SUPABASE_URL   : {'SET ✅' if SUPABASE_URL else 'MISSING ❌'}")
+print(f"  SUPABASE_KEY   : {'SET ✅' if SUPABASE_SERVICE_ROLE_KEY else 'MISSING ❌'}")
 print("=" * 40)
 
 # -----------------------
@@ -44,38 +39,35 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 # -----------------------
-# Email Function
+# Email Function (Gmail SMTP)
 # -----------------------
 def send_email(to, subject, body):
     try:
-        if not SMTP_EMAIL or not SMTP_PASSWORD:
-            print("❌ Email not sent: BREVO_EMAIL or BREVO_PASSWORD is missing in env vars.")
+        if not GMAIL_USER or not GMAIL_PASSWORD:
+            print("❌ Email not sent: GMAIL_USER or GMAIL_PASSWORD missing.")
             return False
 
-        msg = MIMEText(body, "plain", "utf-8")
+        msg            = MIMEText(body, "plain", "utf-8")
         msg["Subject"] = subject
-        msg["From"]    = SMTP_EMAIL
+        msg["From"]    = f"Elite Dance Academy <{GMAIL_USER}>"
         msg["To"]      = to
 
-        print(f"📧 Sending email to: {to} | Subject: {subject}")
+        print(f"📧 Sending email to: {to}")
 
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        server.login(SMTP_EMAIL, SMTP_PASSWORD)
-        server.sendmail(SMTP_EMAIL, to, msg.as_string())
+        server.login(GMAIL_USER, GMAIL_PASSWORD)
+        server.sendmail(GMAIL_USER, to, msg.as_string())
         server.quit()
 
-        print(f"✅ Email sent successfully to {to}")
+        print(f"✅ Email sent to {to}")
         return True
 
     except smtplib.SMTPAuthenticationError:
-        print("❌ Email failed: Authentication error — check BREVO_EMAIL and BREVO_PASSWORD")
-        return False
-    except smtplib.SMTPException as e:
-        print(f"❌ Email failed (SMTP error): {e}")
+        print("❌ Gmail auth failed — make sure you're using an App Password, not your Gmail login password.")
         return False
     except Exception as e:
-        print(f"❌ Email failed (unexpected): {e}")
+        print(f"❌ Email failed: {e}")
         return False
 
 
@@ -146,12 +138,12 @@ def enroll():
     # --- Email to Student ---
     student_email_sent = send_email(
         to      = data.get("email"),
-        subject = f"Welcome to Elite Dance Academy 🎉",
+        subject = "Welcome to Elite Dance Academy!",
         body    = f"""Hello {data.get("name")},
 
 Thank you for enrolling at Elite Dance Academy!
 
-Here are your enrollment details:
+Your Enrollment Details:
 ━━━━━━━━━━━━━━━━━━━━━━━━
 Dance Style     : {data.get("dance_style")}
 Experience Level: {data.get("experience_level")}
@@ -184,10 +176,10 @@ Experience Level: {data.get("experience_level")}
     )
 
     return jsonify({
-        "message":             "Enrollment successful",
-        "data":                response.data,
-        "student_email_sent":  student_email_sent,
-        "academy_email_sent":  academy_email_sent
+        "message":            "Enrollment successful",
+        "data":               response.data,
+        "student_email_sent": student_email_sent,
+        "academy_email_sent": academy_email_sent
     }), 201
 
 
