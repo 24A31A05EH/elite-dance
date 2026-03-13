@@ -475,13 +475,14 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
     };
 
     try {
-        const res = await const res = await fetch("/enroll", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-});
+        const res = await fetch('/enroll', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`
+            },
+            body: JSON.stringify(payload)
+        });
 
         const result = await res.json();
 
