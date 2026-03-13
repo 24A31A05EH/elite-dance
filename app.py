@@ -14,12 +14,9 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # -----------------------------
-# EMAIL CONFIG
+# RESEND EMAIL CONFIG
 # -----------------------------
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
-
-# Email where mentor requests will be sent
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL")
 
 # -----------------------------
 # FLASK APP
@@ -32,11 +29,10 @@ app = Flask(
 
 CORS(app)
 
-# -----------------------------
-# EMAIL FUNCTION
-# -----------------------------
+# ------------------------------------------------
+# EMAIL FUNCTION (Using Resend)
+# ------------------------------------------------
 def send_email(to_email, subject, html_body):
-
     try:
 
         url = "https://api.resend.com/emails"
@@ -60,27 +56,23 @@ def send_email(to_email, subject, html_body):
         return True
 
     except Exception as e:
-
         print("Email error:", e)
-
         return False
 
 
-# -----------------------------
+# ------------------------------------------------
 # HOME ROUTE
-# -----------------------------
+# ------------------------------------------------
 @app.route("/")
 def home():
-
     return render_template("index.html")
 
 
-# -----------------------------
+# ------------------------------------------------
 # SUPABASE TEST ROUTE
-# -----------------------------
+# ------------------------------------------------
 @app.route("/test-supabase")
 def test_supabase():
-
     try:
 
         data = supabase.table("enrollments").select("*").limit(1).execute()
@@ -98,9 +90,9 @@ def test_supabase():
         })
 
 
-# -----------------------------
+# ------------------------------------------------
 # EMAIL TEST ROUTE
-# -----------------------------
+# ------------------------------------------------
 @app.route("/test-email")
 def test_email():
 
@@ -109,14 +101,14 @@ def test_email():
     <p>This is a test email from Elite Dance Academy.</p>
     """
 
-    send_email(ADMIN_EMAIL, "Test Email", body)
+    send_email("your-email@gmail.com", "Test Email", body)
 
     return "Email test sent"
 
 
-# -----------------------------
+# ------------------------------------------------
 # ENROLL ROUTE
-# -----------------------------
+# ------------------------------------------------
 @app.route("/enroll", methods=["POST"])
 def enroll():
 
@@ -137,7 +129,7 @@ def enroll():
         if not name or not email or not phone:
             return jsonify({"error": "Missing required fields"}), 400
 
-        # Store in database
+        # Insert into Supabase
         response = supabase.table("enrollments").insert({
             "name": name,
             "email": email,
@@ -147,10 +139,10 @@ def enroll():
             "experience_level": experience
         }).execute()
 
-        # Student confirmation email
+        # Beautiful HTML Email
         email_body = f"""
         <div style="font-family:Arial;padding:30px;background:#f4f6f8">
-
+        
         <div style="max-width:600px;margin:auto;background:white;padding:30px;border-radius:10px">
 
         <h2 style="color:#e63946;text-align:center">
@@ -159,17 +151,26 @@ def enroll():
 
         <p>Hello <b>{name}</b>,</p>
 
-        <p>Thank you for enrolling in <b>{dance_style}</b>.</p>
+        <p>
+        Thank you for enrolling in the <b>{dance_style}</b> class.
+        </p>
 
-        <p>We are excited to welcome you to our dance family!</p>
+        <p>
+        We are excited to welcome you to the Elite Dance Academy family.
+        Our team will contact you soon with the class schedule and details.
+        </p>
 
         <div style="background:#f1faee;padding:15px;border-radius:8px;margin:20px 0">
+
         <b>Enrollment Details</b><br>
         Name: {name}<br>
         Dance Style: {dance_style}
+
         </div>
 
-        <p>Our team will contact you soon with class schedule details.</p>
+        <p>
+        Keep dancing, keep shining! ✨
+        </p>
 
         <hr>
 
@@ -202,9 +203,9 @@ def enroll():
         }), 500
 
 
-# -----------------------------
-# CONTACT / MENTOR ROUTE
-# -----------------------------
+# ------------------------------------------------
+# CONTACT ROUTE
+# ------------------------------------------------
 @app.route("/contact", methods=["POST"])
 def contact():
 
@@ -219,39 +220,8 @@ def contact():
         if not name or not email or not message:
             return jsonify({"error": "All fields required"}), 400
 
-
-        # -----------------------------
-        # Email to Student
-        # -----------------------------
-        student_email = f"""
-        <h2>Thank You for Contacting Elite Dance Academy</h2>
-
-        <p>Hello <b>{name}</b>,</p>
-
-        <p>Thank you for reaching out to us.</p>
-
-        <p>Our mentor will review your request and contact you shortly.</p>
-
-        <p>We are excited to help you start your dance journey! 💃</p>
-
-        <br>
-
-        <p>Best Regards,<br>
-        Elite Dance Academy Team</p>
-        """
-
-        send_email(
-            email,
-            "We received your message | Elite Dance Academy",
-            student_email
-        )
-
-
-        # -----------------------------
-        # Email to Admin (Mentor Request)
-        # -----------------------------
-        admin_email = f"""
-        <h3>New Mentor Request</h3>
+        email_body = f"""
+        <h3>New Contact Message</h3>
 
         <p><b>Name:</b> {name}</p>
         <p><b>Email:</b> {email}</p>
@@ -261,29 +231,21 @@ def contact():
         """
 
         send_email(
-            ADMIN_EMAIL,
-            f"New Mentor Request from {name}",
-            admin_email
+            "your-email@gmail.com",
+            f"New message from {name}",
+            email_body
         )
 
-
-        return jsonify({
-            "message": "Message sent successfully"
-        })
-
+        return jsonify({"message": "Message sent successfully"})
 
     except Exception as e:
 
-        print(traceback.format_exc())
-
-        return jsonify({
-            "error": str(e)
-        })
+        return jsonify({"error": str(e)})
 
 
-# -----------------------------
+# ------------------------------------------------
 # RUN SERVER
-# -----------------------------
+# ------------------------------------------------
 if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 5000))
