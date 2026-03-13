@@ -3,7 +3,9 @@ from flask_cors import CORS
 from supabase import create_client
 import os
 import traceback
-import requests
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # -----------------------------
 # SUPABASE CONFIG
@@ -16,9 +18,8 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 # -----------------------------
 # EMAIL CONFIG
 # -----------------------------
-RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
-
-# Email where mentor requests will be sent
+GMAIL_USER = os.environ.get("GMAIL_USER")
+GMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD")
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL")
 
 # -----------------------------
@@ -39,23 +40,26 @@ def send_email(to_email, subject, html_body):
 
     try:
 
-        url = "https://api.resend.com/emails"
+        msg = MIMEMultipart("alternative")
 
-        payload = {
-            "from": "Elite Dance Academy <onboarding@resend.dev>",
-            "to": [to_email],
-            "subject": subject,
-            "html": html_body
-        }
+        msg["Subject"] = subject
+        msg["From"] = GMAIL_USER
+        msg["To"] = to_email
 
-        headers = {
-            "Authorization": f"Bearer {RESEND_API_KEY}",
-            "Content-Type": "application/json"
-        }
+        part = MIMEText(html_body, "html")
+        msg.attach(part)
 
-        response = requests.post(url, json=payload, headers=headers)
+        server = smtplib.SMTP("smtp.gmail.com", 587)
 
-        print("Email response:", response.text)
+        server.starttls()
+
+        server.login(GMAIL_USER, GMAIL_PASSWORD)
+
+        server.sendmail(GMAIL_USER, to_email, msg.as_string())
+
+        server.quit()
+
+        print("Email sent successfully")
 
         return True
 
@@ -71,12 +75,11 @@ def send_email(to_email, subject, html_body):
 # -----------------------------
 @app.route("/")
 def home():
-
     return render_template("index.html")
 
 
 # -----------------------------
-# SUPABASE TEST ROUTE
+# TEST SUPABASE
 # -----------------------------
 @app.route("/test-supabase")
 def test_supabase():
@@ -99,14 +102,14 @@ def test_supabase():
 
 
 # -----------------------------
-# EMAIL TEST ROUTE
+# TEST EMAIL
 # -----------------------------
 @app.route("/test-email")
 def test_email():
 
     body = """
-    <h2>Test Email</h2>
-    <p>This is a test email from Elite Dance Academy.</p>
+    <h2>Email Test</h2>
+    <p>This email was sent from Elite Dance Academy.</p>
     """
 
     send_email(ADMIN_EMAIL, "Test Email", body)
@@ -124,9 +127,6 @@ def enroll():
 
         data = request.get_json()
 
-        if not data:
-            return jsonify({"error": "No data provided"}), 400
-
         name = data.get("name")
         email = data.get("email")
         phone = data.get("phone")
@@ -137,7 +137,6 @@ def enroll():
         if not name or not email or not phone:
             return jsonify({"error": "Missing required fields"}), 400
 
-        # Store in database
         response = supabase.table("enrollments").insert({
             "name": name,
             "email": email,
@@ -147,7 +146,6 @@ def enroll():
             "experience_level": experience
         }).execute()
 
-        # Student confirmation email
         email_body = f"""
         <div style="font-family:Arial;padding:30px;background:#f4f6f8">
 
@@ -162,12 +160,6 @@ def enroll():
         <p>Thank you for enrolling in <b>{dance_style}</b>.</p>
 
         <p>We are excited to welcome you to our dance family!</p>
-
-        <div style="background:#f1faee;padding:15px;border-radius:8px;margin:20px 0">
-        <b>Enrollment Details</b><br>
-        Name: {name}<br>
-        Dance Style: {dance_style}
-        </div>
 
         <p>Our team will contact you soon with class schedule details.</p>
 
@@ -219,10 +211,6 @@ def contact():
         if not name or not email or not message:
             return jsonify({"error": "All fields required"}), 400
 
-
-        # -----------------------------
-        # Email to Student
-        # -----------------------------
         student_email = f"""
         <h2>Thank You for Contacting Elite Dance Academy</h2>
 
@@ -232,7 +220,7 @@ def contact():
 
         <p>Our mentor will review your request and contact you shortly.</p>
 
-        <p>We are excited to help you start your dance journey! 💃</p>
+        <p>We are excited to help you start your dance journey!</p>
 
         <br>
 
@@ -246,10 +234,6 @@ def contact():
             student_email
         )
 
-
-        # -----------------------------
-        # Email to Admin (Mentor Request)
-        # -----------------------------
         admin_email = f"""
         <h3>New Mentor Request</h3>
 
@@ -266,11 +250,9 @@ def contact():
             admin_email
         )
 
-
         return jsonify({
             "message": "Message sent successfully"
         })
-
 
     except Exception as e:
 
@@ -282,7 +264,7 @@ def contact():
 
 
 # -----------------------------
-# RUN SERVER
+# RUN APP
 # -----------------------------
 if __name__ == "__main__":
 
