@@ -53,12 +53,25 @@
         .hamburger span { display: block; width: 24px; height: 2px; background: white; transition: 0.3s; border-radius: 2px; }
         @media (max-width: 767px) { .hamburger { display: flex; } }
 
-        #auth-gate { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.96); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 16px; }
-        #auth-gate.hidden { display: none; }
+        /* ✅ FIXED: Auth gate always uses flex when not hidden */
+        #auth-gate { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.96); flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 16px; display: none; }
+        #auth-gate.open { display: flex; }
 
-        #detail-modal, #enroll-modal { overflow-y: auto; -webkit-overflow-scrolling: touch; }
-        #detail-modal .relative.z-10 { margin: auto; max-height: 90vh; overflow-y: auto; }
-        #enroll-modal > div { max-height: 90vh; overflow-y: auto; }
+        /* ✅ FIXED: Modals use display:none by default, flex when open */
+        #detail-modal { position: fixed; inset: 0; z-index: 101; display: none; align-items: flex-end; justify-content: center; padding: 0; backdrop-filter: blur(4px); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #detail-modal.open { display: flex; }
+        @media (min-width: 768px) {
+            #detail-modal { align-items: center; padding: 1rem; }
+        }
+
+        #enroll-modal { position: fixed; inset: 0; z-index: 102; background: rgba(0,0,0,0.95); display: none; align-items: flex-end; justify-content: center; padding: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #enroll-modal.open { display: flex; }
+        @media (min-width: 768px) {
+            #enroll-modal { align-items: center; padding: 1rem; }
+        }
+
+        #detail-modal .modal-inner { margin: auto; max-height: 90vh; overflow-y: auto; }
+        #enroll-modal .modal-inner { max-height: 95vh; overflow-y: auto; }
 
         html { scroll-behavior: smooth; }
         button, a { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
@@ -71,7 +84,7 @@
 <body>
 
 <!-- AUTH GATE -->
-<div id="auth-gate" class="hidden">
+<div id="auth-gate">
     <div class="glass p-8 rounded-[2rem] w-full max-w-sm text-center space-y-6">
         <h2 class="text-3xl font-black italic text-cyan-400">Sign In to Enroll</h2>
         <p class="text-gray-400 text-sm">Create your academy account to reserve your spot and track your journey.</p>
@@ -79,7 +92,7 @@
             <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.2 0 5.9 1.1 8.1 2.9l6-6C34.5 3.1 29.6 1 24 1 14.8 1 7 6.7 3.7 14.6l7 5.4C12.4 14 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.4 5.7c4.3-4 6.8-9.9 7.2-16.9z"/><path fill="#FBBC05" d="M10.7 28.6A14.6 14.6 0 0 1 9.5 24c0-1.6.3-3.2.8-4.6l-7-5.4A23.9 23.9 0 0 0 0 24c0 3.9.9 7.5 2.6 10.7l8.1-6.1z"/><path fill="#34A853" d="M24 47c5.9 0 10.9-2 14.5-5.3l-7.4-5.7c-2 1.4-4.6 2.2-7.1 2.2-6.3 0-11.7-4.3-13.7-10.1l-8.1 6.1C7 41.3 14.9 47 24 47z"/></svg>
             Continue with Google
         </button>
-        <button onclick="document.getElementById('auth-gate').classList.add('hidden')" class="text-gray-500 text-xs hover:text-white transition min-h-0">Cancel</button>
+        <button onclick="closeAuthGate()" class="text-gray-500 text-xs hover:text-white transition min-h-0">Cancel</button>
     </div>
 </div>
 
@@ -224,11 +237,11 @@
 </footer>
 
 <!-- DETAIL MODAL -->
-<div id="detail-modal" class="fixed inset-0 z-[101] hidden flex items-end md:items-center justify-center p-0 md:p-4 backdrop-blur-sm">
+<div id="detail-modal">
     <div id="detail-modal-bg" class="absolute inset-0 z-0" style="background-size:cover;background-position:center;">
         <div class="absolute inset-0" style="background:rgba(0,0,0,0.6);"></div>
     </div>
-    <div class="relative z-10 bg-black/20 backdrop-blur-sm w-full max-w-2xl p-8 md:p-10 rounded-[2rem] border border-white/10 shadow-2xl animate__animated animate__fadeInUp">
+    <div class="modal-inner relative z-10 bg-black/20 backdrop-blur-sm w-full max-w-2xl p-8 md:p-10 rounded-[2rem] border border-white/10 shadow-2xl animate__animated animate__fadeInUp">
         <button onclick="closeDetails()" class="absolute top-4 right-5 text-gray-400 hover:text-white transition min-h-0 w-8 h-8">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
@@ -256,8 +269,8 @@
 </div>
 
 <!-- ENROLL MODAL -->
-<div id="enroll-modal" class="fixed inset-0 z-[102] bg-black/95 hidden flex items-end md:items-center justify-center p-0 md:p-4">
-    <div class="glass w-full max-w-md p-6 md:p-8 rounded-t-[2rem] md:rounded-[2rem] relative max-h-[95vh] overflow-y-auto">
+<div id="enroll-modal">
+    <div class="modal-inner glass w-full max-w-md p-6 md:p-8 rounded-t-[2rem] md:rounded-[2rem] relative">
         <button onclick="closeEnroll()" class="absolute top-4 right-4 text-gray-500 hover:text-white transition min-h-0 w-8 h-8 text-lg">✕</button>
         <h2 class="text-2xl font-black mb-2 text-cyan-400 uppercase italic">Registration</h2>
         <div class="flex items-center gap-3 mb-5 glass p-3 rounded-xl">
@@ -304,8 +317,6 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 // ─── SUPABASE INIT ────────────────────────────────────────────
 const SUPABASE_URL = "https://yhvnbwwxlkbccishcuue.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlodm5id3d4bGtiY2Npc2hjdXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MjIyODksImV4cCI6MjA4ODE5ODI4OX0.F4TFa8Bh6APz25gasQN8JvGwcx5QZyTqr-UZxMUIug0";
-
-// ✅ YOUR RAILWAY URL — update this if your Railway URL ever changes
 const SITE_URL = "https://elite-dance-production.up.railway.app";
 
 const { createClient } = supabase;
@@ -328,7 +339,7 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
         prefillForm(session.user);
         if (sessionStorage.getItem('pendingEnroll')) {
             sessionStorage.removeItem('pendingEnroll');
-            document.getElementById('auth-gate').classList.add('hidden');
+            closeAuthGate();
             setTimeout(showEnroll, 400);
         }
     }
@@ -367,7 +378,6 @@ function prefillForm(user) {
     document.getElementById('email').value = user.email || '';
 }
 
-// ✅ FIXED: Always redirects back to Railway URL, never to Render
 async function signInWithGoogle() {
     const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
@@ -379,6 +389,10 @@ async function signInWithGoogle() {
 function signInFromGate() {
     sessionStorage.setItem('pendingEnroll', '1');
     signInWithGoogle();
+}
+
+function closeAuthGate() {
+    document.getElementById('auth-gate').classList.remove('open');
 }
 
 async function signOut() {
@@ -423,31 +437,34 @@ function showDetails(style) {
     document.getElementById('detail-mastery').innerHTML     = d.mastery.map(i => `<li class="flex items-start gap-1">✅ ${i}</li>`).join('');
     document.getElementById('dance_style').value            = style;
     document.getElementById('detail-modal-bg').style.backgroundImage = `url('${d.bg}')`;
-    document.getElementById('detail-modal').classList.remove('hidden');
+    document.getElementById('detail-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
 
 function closeDetails() {
-    document.getElementById('detail-modal').classList.add('hidden');
+    document.getElementById('detail-modal').classList.remove('open');
     document.body.style.overflow = '';
 }
 
 function showEnroll() {
     if (!currentSession) {
-        document.getElementById('auth-gate').classList.remove('hidden');
+        document.getElementById('auth-gate').classList.add('open');
         return;
     }
     updateAuthUI(currentSession);
-    document.getElementById('enroll-modal').classList.remove('hidden');
+    document.getElementById('enroll-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
 
 function closeEnroll() {
-    document.getElementById('enroll-modal').classList.add('hidden');
+    document.getElementById('enroll-modal').classList.remove('open');
     document.body.style.overflow = '';
 }
 
-function switchToEnroll() { closeDetails(); showEnroll(); }
+function switchToEnroll() {
+    closeDetails();
+    showEnroll();
+}
 
 // ─── ENROLL FORM ──────────────────────────────────────────────
 document.getElementById('enrollmentForm').onsubmit = async (e) => {
@@ -458,7 +475,10 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
     if (!session) {
         msg.style.color = 'red';
         msg.innerText = 'Session expired. Please sign in again.';
-        setTimeout(() => { closeEnroll(); document.getElementById('auth-gate').classList.remove('hidden'); }, 1500);
+        setTimeout(() => {
+            closeEnroll();
+            document.getElementById('auth-gate').classList.add('open');
+        }, 1500);
         return;
     }
 
@@ -466,9 +486,9 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
     msg.innerText = 'Processing...';
 
     const payload = {
-        name:             document.getElementById('name').value,
-        email:            document.getElementById('email').value,
-        phone:            document.getElementById('phone').value,
+        name:             document.getElementById('name').value.trim(),
+        email:            document.getElementById('email').value.trim(),
+        phone:            document.getElementById('phone').value.trim(),
         age:              document.getElementById('age').value ? parseInt(document.getElementById('age').value) : null,
         dance_style:      document.getElementById('dance_style').value,
         experience_level: document.getElementById('experience_level').value
@@ -545,6 +565,7 @@ async function submitContactForm() {
     }
 }
 
+// ─── CLOSE MODALS ON BACKDROP CLICK ──────────────────────────
 document.getElementById('detail-modal').addEventListener('click', function(e) {
     if (e.target === this) closeDetails();
 });
