@@ -5,20 +5,21 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
+import traceback
 
 # -----------------------------
 # SUPABASE CONFIG
 # -----------------------------
-SUPABASE_URL = "https://yhvnbwwxlkbccishcuue.supabase.co"
-SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlodm5id3d4bGtiY2Npc2hjdXVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjYyMjI4OSwiZXhwIjoyMDg4MTk4Mjg5fQ.iVN3SPzhegXnZHmRJCnPX4paKPIyFxzsemlxae2BSgs"
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://yhvnbwwxlkbccishcuue.supabase.co")
+SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlodm5id3d4bGtiY2Npc2hjdXVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjYyMjI4OSwiZXhwIjoyMDg4MTk4Mjg5fQ.iVN3SPzhegXnZHmRJCnPX4paKPIyFxzsemlxae2BSgs")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 # -----------------------------
 # EMAIL CONFIG
 # -----------------------------
-EMAIL_SENDER = "srisrimehernayana@gmail.com"
-EMAIL_PASSWORD = "fdgm ladm gyqp sbcl"
+EMAIL_SENDER = os.environ.get("GMAIL_USER", "srisrimehernayana@gmail.com")
+EMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD", "fdgm ladm gyqp sbcl")
 
 # -----------------------------
 # FLASK APP
@@ -33,23 +34,27 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 # ----------------------------------------------------
-# EMAIL HELPER
+# EMAIL HELPER — never crashes the app
 # ----------------------------------------------------
 def send_email(to_email, subject, body):
-    msg = MIMEMultipart()
-    msg["From"] = EMAIL_SENDER
-    msg["To"] = to_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
     try:
+        msg = MIMEMultipart()
+        msg["From"] = EMAIL_SENDER
+        msg["To"] = to_email
+        msg["Subject"] = subject
+        msg.attach(MIMEText(body, "plain"))
+
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
         server.login(EMAIL_SENDER, EMAIL_PASSWORD)
         server.sendmail(EMAIL_SENDER, to_email, msg.as_string())
         server.quit()
         print(f"✅ Email sent to {to_email}")
+        return True
     except Exception as e:
-        print("❌ Email sending failed:", e)
+        # ✅ Email failure is logged but NEVER crashes the enrollment
+        print(f"❌ Email failed (non-fatal): {e}")
+        return False
 
 
 # ----------------------------------------------------
@@ -75,36 +80,35 @@ def test_supabase():
 # ----------------------------------------------------
 @app.route("/enroll", methods=["POST"])
 def enroll():
-
-    # 1. Check Authorization
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        return jsonify({"error": "Authentication required. Please sign in."}), 401
-
-    token = auth_header.split(" ")[1]
-
-    # 2. Verify Supabase user
     try:
-        auth_response = supabase.auth.get_user(token)
-        user = auth_response.user
-        if user is None:
-            return jsonify({"error": "Invalid session. Please login again."}), 403
-    except Exception as e:
-        print("[AUTH ERROR]", e)
-        return jsonify({"error": "Invalid or expired token"}), 403
+        # 1. Check Authorization
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return jsonify({"error": "Authentication required. Please sign in."}), 401
 
-    # 3. Parse JSON
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "No enrollment data provided."}), 400
+        token = auth_header.split(" ")[1]
 
-    required_fields = ["name", "email", "phone", "dance_style", "experience_level"]
-    missing = [f for f in required_fields if not data.get(f)]
-    if missing:
-        return jsonify({"error": f"Missing fields: {', '.join(missing)}"}), 400
+        # 2. Verify Supabase user
+        try:
+            auth_response = supabase.auth.get_user(token)
+            user = auth_response.user
+            if user is None:
+                return jsonify({"error": "Invalid session. Please login again."}), 403
+        except Exception as e:
+            print("[AUTH ERROR]", e)
+            return jsonify({"error": "Invalid or expired token"}), 403
 
-    # 4. Insert into database
-    try:
+        # 3. Parse JSON
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No enrollment data provided."}), 400
+
+        required_fields = ["name", "email", "phone", "dance_style", "experience_level"]
+        missing = [f for f in required_fields if not data.get(f)]
+        if missing:
+            return jsonify({"error": f"Missing fields: {', '.join(missing)}"}), 400
+
+        # 4. Insert into Supabase
         response = supabase.table("enrollments").insert({
             "name": data.get("name"),
             "email": data.get("email"),
@@ -115,7 +119,7 @@ def enroll():
             "user_id": user.id
         }).execute()
 
-        # 5. Send confirmation email to the student
+        # 5. Send welcome email to STUDENT (failure won't break enrollment)
         send_email(
             to_email=data.get("email"),
             subject="🎉 Welcome to Elite Dance Academy!",
@@ -134,44 +138,48 @@ Elite Dance Academy"""
         return jsonify({"message": "Enrollment successful!", "data": response.data}), 201
 
     except Exception as e:
-        print("[DB ERROR]", e)
-        return jsonify({"error": f"Database error: {str(e)}"}), 500
+        # ✅ Full error printed in Railway logs
+        print("[ENROLL ERROR]", traceback.format_exc())
+        return jsonify({"error": f"Server error: {str(e)}"}), 500
 
 
 # ----------------------------------------------------
-# ✅ CONTACT ROUTE — was missing, caused the crash!
+# CONTACT ROUTE
 # ----------------------------------------------------
 @app.route("/contact", methods=["POST"])
 def contact():
-    data = request.get_json()
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided."}), 400
 
-    if not data:
-        return jsonify({"error": "No data provided."}), 400
+        name    = data.get("name", "").strip()
+        email   = data.get("email", "").strip()
+        message = data.get("message", "").strip()
 
-    name    = data.get("name", "").strip()
-    email   = data.get("email", "").strip()
-    message = data.get("message", "").strip()
+        if not name or not email or not message:
+            return jsonify({"error": "All fields are required."}), 400
 
-    if not name or not email or not message:
-        return jsonify({"error": "All fields are required."}), 400
-
-    # Notify academy owner by email
-    send_email(
-        to_email=EMAIL_SENDER,
-        subject=f"🎓 Trial Class Request from {name}",
-        body=f"""New trial class request!
+        send_email(
+            to_email=EMAIL_SENDER,
+            subject=f"🎓 Trial Class Request from {name}",
+            body=f"""New trial class request!
 
 Name:    {name}
 Email:   {email}
 Message: {message}
 """
-    )
+        )
 
-    return jsonify({"message": "Message received! A mentor will contact you soon."}), 200
+        return jsonify({"message": "Message received! A mentor will contact you soon."}), 200
+
+    except Exception as e:
+        print("[CONTACT ERROR]", traceback.format_exc())
+        return jsonify({"error": f"Server error: {str(e)}"}), 500
 
 
 # ----------------------------------------------------
-# RUN SERVER (local only — Railway uses Gunicorn)
+# RUN SERVER
 # ----------------------------------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
