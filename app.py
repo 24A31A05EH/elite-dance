@@ -160,25 +160,22 @@ def enroll():
         # Send confirmation email to student
         try:
             send_email(
-                email,
-                "Welcome to Elite Dance Academy 💃",
-                f"<div style='font-family:Arial;padding:30px;background:#f4f6f8'>"
-                f"<div style='max-width:600px;margin:auto;background:white;padding:30px;border-radius:10px'>"
-                f"<h2 style='color:#e63946;text-align:center'>💃 Welcome to Elite Dance Academy</h2>"
-                f"<p>Hello <b>{name}</b>,</p>"
-                f"<p>Thank you for enrolling in <b>{dance_style}</b>. We are excited to welcome you to our dance family!</p>"
-                f"<div style='background:#f1faee;padding:15px;border-radius:8px;margin:20px 0'>"
-                f"<b>Enrollment Details</b><br>"
-                f"Name: {name}<br>"
-                f"Dance Style: {dance_style}"
-                f"</div>"
-                f"<p>Our team will contact you soon with class schedule details.</p>"
-                f"<p>Keep dancing, keep shining! ✨</p>"
-                f"<hr>"
-                f"<p style='text-align:center;color:#777'>Elite Dance Academy<br>Inspiring Passion Through Dance</p>"
-                f"</div>"
-                f"</div>"
-            )
+    email,
+    "Welcome to Elite Dance Academy 💃",
+    (
+        f"<div style=\"font-family:Arial;padding:30px;background:#f4f6f8\">"
+        f"<div style=\"max-width:600px;margin:auto;background:white;padding:30px;border-radius:10px\">"
+        f"<h2 style=\"color:#e63946;text-align:center\">💃 Welcome to Elite Dance Academy</h2>"
+        f"<p>Hello <b>{name}</b>,</p>"
+        f"<p>Thank you for enrolling in <b>{dance_style}</b>. We are excited to welcome you to our dance family!</p>"
+        f"<p>Our team will contact you soon with class schedule details.</p>"
+        f"<p>Keep dancing, keep shining! ✨</p>"
+        f"<hr>"
+        f"<p style=\"text-align:center;color:#777\">Elite Dance Academy<br>Inspiring Passion Through Dance</p>"
+        f"</div>"
+        f"</div>"
+    )
+)
         except Exception as mail_err:
             print("Email failed (non-fatal):", mail_err)
 
