@@ -176,7 +176,6 @@
             <div class="glass p-5 rounded-2xl border-l-4 border-orange-500 space-y-3" style="width:280px;flex-shrink:0;"><div class="text-yellow-400 text-xs">★★★★☆</div><p class="text-gray-300 text-xs leading-relaxed italic">"Salsa nights at Elite are legendary. Now we compete at the state level."</p><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full flex items-center justify-center font-black text-xs shrink-0" style="background:linear-gradient(135deg,#ef4444,#eab308)">R</div><p class="text-xs font-bold text-white">Rohan & Tara <span class="text-gray-600 font-normal">· Salsa</span></p></div></div>
             <div class="glass p-5 rounded-2xl border-l-4 border-green-500 space-y-3" style="width:280px;flex-shrink:0;"><div class="text-yellow-400 text-xs">★★★★★</div><p class="text-gray-300 text-xs leading-relaxed italic">"Kathak is a spiritual experience. My instructor's patience is truly extraordinary."</p><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full flex items-center justify-center font-black text-xs shrink-0" style="background:linear-gradient(135deg,#22c55e,#00f2ff)">M</div><p class="text-xs font-bold text-white">Meera Joshi <span class="text-gray-600 font-normal">· Kathak</span></p></div></div>
             <div class="glass p-5 rounded-2xl border-l-4 border-yellow-400 space-y-3" style="width:280px;flex-shrink:0;"><div class="text-yellow-400 text-xs">★★★★★</div><p class="text-gray-300 text-xs leading-relaxed italic">"Ballet gave me discipline I carry everywhere. Scouted after just 8 months."</p><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full flex items-center justify-center font-black text-xs shrink-0" style="background:linear-gradient(135deg,#3b82f6,#6366f1)">D</div><p class="text-xs font-bold text-white">Divya Sharma <span class="text-gray-600 font-normal">· Ballet</span></p></div></div>
-            <!-- Duplicates for seamless loop -->
             <div class="glass p-5 rounded-2xl border-l-4 border-pink-500 space-y-3" style="width:280px;flex-shrink:0;"><div class="text-yellow-400 text-xs">★★★★★</div><p class="text-gray-300 text-xs leading-relaxed italic">"Elite Dance completely transformed me. The Bharatanatyam training is unmatched in the city."</p><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full flex items-center justify-center font-black text-xs shrink-0" style="background:linear-gradient(135deg,#ff007f,#a855f7)">P</div><p class="text-xs font-bold text-white">Priya Nair <span class="text-gray-600 font-normal">· Bharatanatyam</span></p></div></div>
             <div class="glass p-5 rounded-2xl border-l-4 border-cyan-400 space-y-3" style="width:280px;flex-shrink:0;"><div class="text-yellow-400 text-xs">★★★★★</div><p class="text-gray-300 text-xs leading-relaxed italic">"The Hip Hop classes are FIRE. I placed top 3 in my very first battle."</p><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full flex items-center justify-center font-black text-xs shrink-0" style="background:linear-gradient(135deg,#00f2ff,#3b82f6)">A</div><p class="text-xs font-bold text-white">Arjun Mehta <span class="text-gray-600 font-normal">· Hip Hop</span></p></div></div>
             <div class="glass p-5 rounded-2xl border-l-4 border-purple-500 space-y-3" style="width:280px;flex-shrink:0;"><div class="text-yellow-400 text-xs">★★★★★</div><p class="text-gray-300 text-xs leading-relaxed italic">"Contemporary became my therapy. I've never felt stronger or more expressive."</p><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full flex items-center justify-center font-black text-xs shrink-0" style="background:linear-gradient(135deg,#a855f7,#f97316)">S</div><p class="text-xs font-bold text-white">Sneha Kulkarni <span class="text-gray-600 font-normal">· Contemporary</span></p></div></div>
@@ -271,9 +270,15 @@
         <form id="enrollmentForm" class="space-y-3">
             <input type="text" id="name" placeholder="Full Name" required class="p-4 rounded-xl outline-none">
             <input type="email" id="email" placeholder="Email Address" required class="p-4 rounded-xl outline-none">
-            <input type="tel" id="phone" placeholder="Phone Number" required class="p-4 rounded-xl outline-none">
+            <!-- ✅ Phone: only digits, max 10 -->
+            <input type="tel" id="phone" placeholder="Phone Number (10 digits)" required maxlength="10"
+                oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
+                class="p-4 rounded-xl outline-none">
             <div class="grid grid-cols-2 gap-3">
-                <input type="number" id="age" placeholder="Age" class="p-4 rounded-xl outline-none">
+                <!-- ✅ Age: max 2 digits, 1-99 only -->
+                <input type="number" id="age" placeholder="Age" min="1" max="99"
+                    oninput="if(this.value.length>2)this.value=this.value.slice(0,2);if(parseInt(this.value)>99)this.value=99;if(parseInt(this.value)<1&&this.value!='')this.value=1"
+                    class="p-4 rounded-xl outline-none">
                 <select id="experience_level" class="p-4 rounded-xl outline-none">
                     <option value="Beginner">Beginner</option>
                     <option value="Intermediate">Intermediate</option>
@@ -304,8 +309,6 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 // ─── SUPABASE INIT ────────────────────────────────────────────
 const SUPABASE_URL = "https://yhvnbwwxlkbccishcuue.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlodm5id3d4bGtiY2Npc2hjdXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MjIyODksImV4cCI6MjA4ODE5ODI4OX0.F4TFa8Bh6APz25gasQN8JvGwcx5QZyTqr-UZxMUIug0";
-
-// ✅ YOUR RAILWAY URL — update this if your Railway URL ever changes
 const SITE_URL = "https://elite-dance-production.up.railway.app";
 
 const { createClient } = supabase;
@@ -367,7 +370,6 @@ function prefillForm(user) {
     document.getElementById('email').value = user.email || '';
 }
 
-// ✅ FIXED: Always redirects back to Railway URL, never to Render
 async function signInWithGoogle() {
     const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
@@ -462,14 +464,30 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
         return;
     }
 
+    // ✅ Phone validation
+    const phoneVal = document.getElementById('phone').value.trim();
+    if (!/^\d{10}$/.test(phoneVal)) {
+        msg.style.color = 'red';
+        msg.innerText = 'Phone number must be exactly 10 digits.';
+        return;
+    }
+
+    // ✅ Age validation
+    const ageVal = document.getElementById('age').value;
+    if (ageVal && (parseInt(ageVal) < 1 || parseInt(ageVal) > 99)) {
+        msg.style.color = 'red';
+        msg.innerText = 'Please enter a valid age between 1 and 99.';
+        return;
+    }
+
     msg.style.color = '#aaa';
     msg.innerText = 'Processing...';
 
     const payload = {
-        name:             document.getElementById('name').value,
-        email:            document.getElementById('email').value,
-        phone:            document.getElementById('phone').value,
-        age:              document.getElementById('age').value ? parseInt(document.getElementById('age').value) : null,
+        name:             document.getElementById('name').value.trim(),
+        email:            document.getElementById('email').value.trim(),
+        phone:            phoneVal,
+        age:              ageVal ? parseInt(ageVal) : null,
         dance_style:      document.getElementById('dance_style').value,
         experience_level: document.getElementById('experience_level').value
     };
