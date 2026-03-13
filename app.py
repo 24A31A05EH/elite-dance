@@ -6,6 +6,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 import traceback
+import requests
 
 # -----------------------------
 # SUPABASE CONFIG (FROM ENV)
@@ -36,36 +37,36 @@ CORS(app)
 # -----------------------------
 # EMAIL FUNCTION
 # -----------------------------
+import requests
+
 def send_email(to_email, subject, body):
     try:
-        print("Connecting to Gmail SMTP...")
 
-        msg = MIMEMultipart()
-        msg["From"] = EMAIL_SENDER
-        msg["To"] = to_email
-        msg["Subject"] = subject
-        msg.attach(MIMEText(body, "plain"))
+        api_key = os.environ.get("RESEND_API_KEY")
 
-        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=20)
-        server.starttls()
-        server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        url = "https://api.resend.com/emails"
 
-        server.sendmail(
-            EMAIL_SENDER,
-            to_email,
-            msg.as_string()
-        )
+        payload = {
+            "from": "Elite Dance Academy <onboarding@resend.dev>",
+            "to": [to_email],
+            "subject": subject,
+            "text": body
+        }
 
-        server.quit()
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
 
-        print("Email sent successfully")
+        response = requests.post(url, json=payload, headers=headers)
+
+        print("Email API response:", response.text)
+
         return True
 
     except Exception as e:
         print("Email error:", e)
         return False
-
-
 # -----------------------------
 # HOME ROUTE
 # -----------------------------
