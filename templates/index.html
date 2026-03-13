@@ -475,20 +475,13 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
     };
 
     try {
-        const res = await fetch("/enroll", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    name: name,
-    email: email,
-    phone: phone,
-    age: age,
-    dance_style: danceStyle,
-    experience_level: experience
-  })
-})
+        const res = await const res = await fetch("/enroll", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+});
 
         const result = await res.json();
 
