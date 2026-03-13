@@ -20,7 +20,6 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 # -----------------------------
 GMAIL_USER = os.environ.get("GMAIL_USER")
 GMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD")
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL")
 
 # -----------------------------
 # FLASK APP
@@ -37,11 +36,8 @@ CORS(app)
 # EMAIL FUNCTION
 # -----------------------------
 def send_email(to_email, subject, html_body):
-
     try:
-
         msg = MIMEMultipart("alternative")
-
         msg["Subject"] = subject
         msg["From"] = GMAIL_USER
         msg["To"] = to_email
@@ -50,24 +46,20 @@ def send_email(to_email, subject, html_body):
         msg.attach(part)
 
         server = smtplib.SMTP("smtp.gmail.com", 587)
-
         server.starttls()
-
         server.login(GMAIL_USER, GMAIL_PASSWORD)
-
         server.sendmail(GMAIL_USER, to_email, msg.as_string())
-
-        server.quit()
-
-        print("Email sent successfully")
-
         return True
 
     except Exception as e:
-
         print("Email error:", e)
-
         return False
+
+    finally:
+        try:
+            server.quit()
+        except Exception:
+            pass
 
 
 # -----------------------------
@@ -83,38 +75,20 @@ def home():
 # -----------------------------
 @app.route("/test-supabase")
 def test_supabase():
-
     try:
-
         data = supabase.table("enrollments").select("*").limit(1).execute()
-
         return jsonify({
             "connected": True,
             "data": data.data
         })
-
     except Exception as e:
-
         return jsonify({
             "connected": False,
             "error": str(e)
-        })
+        }), 500
 
 
-# -----------------------------
-# TEST EMAIL
-# -----------------------------
-@app.route("/test-email")
-def test_email():
 
-    body = """
-    <h2>Email Test</h2>
-    <p>This email was sent from Elite Dance Academy.</p>
-    """
-
-    send_email(ADMIN_EMAIL, "Test Email", body)
-
-    return "Email test sent"
 
 
 # -----------------------------
@@ -122,21 +96,37 @@ def test_email():
 # -----------------------------
 @app.route("/enroll", methods=["POST"])
 def enroll():
-
     try:
+        # ✅ Verify Authorization token
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return jsonify({"error": "Unauthorized. Please sign in."}), 401
+
+        token = auth_header.split(" ")[1]
+
+        # ✅ Validate token with Supabase
+        try:
+            user_response = supabase.auth.get_user(token)
+            if not user_response or not user_response.user:
+                return jsonify({"error": "Invalid or expired session. Please sign in again."}), 401
+        except Exception:
+            return jsonify({"error": "Session verification failed. Please sign in again."}), 401
 
         data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
 
-        name = data.get("name")
-        email = data.get("email")
-        phone = data.get("phone")
+        name = data.get("name", "").strip()
+        email = data.get("email", "").strip()
+        phone = data.get("phone", "").strip()
         age = data.get("age")
-        dance_style = data.get("dance_style")
-        experience = data.get("experience_level")
+        dance_style = data.get("dance_style", "").strip()
+        experience = data.get("experience_level", "").strip()
 
         if not name or not email or not phone:
-            return jsonify({"error": "Missing required fields"}), 400
+            return jsonify({"error": "Name, email, and phone are required."}), 400
 
+        # ✅ Insert into Supabase
         response = supabase.table("enrollments").insert({
             "name": name,
             "email": email,
@@ -146,52 +136,32 @@ def enroll():
             "experience_level": experience
         }).execute()
 
+        # ✅ Send confirmation email to student
         email_body = f"""
         <div style="font-family:Arial;padding:30px;background:#f4f6f8">
-
-        <div style="max-width:600px;margin:auto;background:white;padding:30px;border-radius:10px">
-
-        <h2 style="color:#e63946;text-align:center">
-        💃 Welcome to Elite Dance Academy
-        </h2>
-
-        <p>Hello <b>{name}</b>,</p>
-
-        <p>Thank you for enrolling in <b>{dance_style}</b>.</p>
-
-        <p>We are excited to welcome you to our dance family!</p>
-
-        <p>Our team will contact you soon with class schedule details.</p>
-
-        <hr>
-
-        <p style="text-align:center;color:#777">
-        Elite Dance Academy<br>
-        Inspiring Passion Through Dance
-        </p>
-
-        </div>
+          <div style="max-width:600px;margin:auto;background:white;padding:30px;border-radius:10px">
+            <h2 style="color:#e63946;text-align:center">💃 Welcome to Elite Dance Academy</h2>
+            <p>Hello <b>{name}</b>,</p>
+            <p>Thank you for enrolling in <b>{dance_style}</b>.</p>
+            <p>We are excited to welcome you to our dance family!</p>
+            <p>Our team will contact you soon with class schedule details.</p>
+            <hr>
+            <p style="text-align:center;color:#777">
+              Elite Dance Academy<br>Inspiring Passion Through Dance
+            </p>
+          </div>
         </div>
         """
-
-        send_email(
-            email,
-            "Welcome to Elite Dance Academy 💃",
-            email_body
-        )
+        send_email(email, "Welcome to Elite Dance Academy 💃", email_body)
 
         return jsonify({
             "message": "Enrollment successful",
             "data": response.data
-        })
+        }), 200
 
     except Exception as e:
-
         print(traceback.format_exc())
-
-        return jsonify({
-            "error": str(e)
-        }), 500
+        return jsonify({"error": str(e)}), 500
 
 
 # -----------------------------
@@ -199,78 +169,40 @@ def enroll():
 # -----------------------------
 @app.route("/contact", methods=["POST"])
 def contact():
-
     try:
-
         data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
 
-        name = data.get("name")
-        email = data.get("email")
-        message = data.get("message")
+        name = data.get("name", "").strip()
+        email = data.get("email", "").strip()
+        message = data.get("message", "").strip()
 
         if not name or not email or not message:
-            return jsonify({"error": "All fields required"}), 400
+            return jsonify({"error": "All fields are required."}), 400
 
+        # ✅ Confirmation email to student
         student_email = f"""
         <h2>Thank You for Contacting Elite Dance Academy</h2>
-
         <p>Hello <b>{name}</b>,</p>
-
         <p>Thank you for reaching out to us.</p>
-
         <p>Our mentor will review your request and contact you shortly.</p>
-
         <p>We are excited to help you start your dance journey!</p>
-
         <br>
-
-        <p>Best Regards,<br>
-        Elite Dance Academy Team</p>
+        <p>Best Regards,<br>Elite Dance Academy Team</p>
         """
+        send_email(email, "We received your message | Elite Dance Academy", student_email)
 
-        send_email(
-            email,
-            "We received your message | Elite Dance Academy",
-            student_email
-        )
-
-        admin_email = f"""
-        <h3>New Mentor Request</h3>
-
-        <p><b>Name:</b> {name}</p>
-        <p><b>Email:</b> {email}</p>
-
-        <p><b>Message:</b></p>
-        <p>{message}</p>
-        """
-
-        send_email(
-            ADMIN_EMAIL,
-            f"New Mentor Request from {name}",
-            admin_email
-        )
-
-        return jsonify({
-            "message": "Message sent successfully"
-        })
+        return jsonify({"message": "Message sent successfully"}), 200
 
     except Exception as e:
-
         print(traceback.format_exc())
-
-        return jsonify({
-            "error": str(e)
-        })
+        return jsonify({"error": str(e)}), 500
 
 
 # -----------------------------
 # RUN APP
 # -----------------------------
 if __name__ == "__main__":
-
     port = int(os.environ.get("PORT", 5000))
-
-    app.run(
-        host="0.0.0.0",
-        port=port
-    )
+    app.run(host="0.0.0.0", port=port)
