@@ -197,17 +197,6 @@ Message:
 
     except Exception as e:
         return jsonify({"error": str(e)})
- @app.route("/admin/enrollments")
- def admin_enrollments():
-    try:
-        data = supabase.table("enrollments").select("*").execute()
-        return jsonify(data.data)
-    except Exception as e:
-        return jsonify({"error": str(e)})       
-
-
-        
-
 
 # -----------------------------
 # RUN APP
