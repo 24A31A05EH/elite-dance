@@ -159,29 +159,8 @@ def enroll():
 
         # Send confirmation email to student
         try:
-            send_email(
-                email,
-                "Welcome to Elite Dance Academy 💃",
-                f"""
-                <div style="font-family:Arial;padding:30px;background:#f4f6f8">
-                <div style="max-width:600px;margin:auto;background:white;padding:30px;border-radius:10px">
-                <h2 style="color:#e63946;text-align:center">💃 Welcome to Elite Dance Academy</h2>
-                <p>Hello <b>{name}</b>,</p>
-                <p>Thank you for enrolling in <b>{dance_style}</b>.</p>
-                <p>We are excited to welcome you to our dance family!</p>
-                <div style="background:#f1faee;padding:15px;border-radius:8px;margin:20px 0">
-                <b>Enrollment Details</b><br>
-                Name: {name}<br>
-                Dance Style: {dance_style}
-                </div>
-                <p>Our team will contact you soon with class schedule details.</p>
-                <p>Keep dancing, keep shining! ✨</p>
-                <hr>
-                <p style="text-align:center;color:#777">Elite Dance Academy<br>Inspiring Passion Through Dance</p>
-                </div>
-                </div>
-                """
-            )
+            html = "<div style=\"font-family:Arial;padding:30px\"><h2 style=\"color:#e63946;text-align:center\">&#128131; Welcome to Elite Dance Academy</h2><p>Hello <b>" + name + "</b>,</p><p>Thank you for enrolling in <b>" + dance_style + "</b>. We are excited to welcome you to our dance family!</p><p>Our team will contact you soon with class schedule details.</p><p>Keep dancing, keep shining! &#10024;</p><hr><p style=\"text-align:center;color:#777\">Elite Dance Academy<br>Inspiring Passion Through Dance</p></div>"
+            send_email(email, "Welcome to Elite Dance Academy", html)
         except Exception as mail_err:
             print("Email failed (non-fatal):", mail_err)
 
@@ -211,19 +190,8 @@ def contact():
 
         # Send confirmation to student only
         try:
-            send_email(
-                email,
-                "We received your message | Elite Dance Academy",
-                f"""
-                <h2>Thank You for Contacting Elite Dance Academy</h2>
-                <p>Hello <b>{name}</b>,</p>
-                <p>Thank you for reaching out to us.</p>
-                <p>Our mentor will review your request and contact you shortly.</p>
-                <p>We are excited to help you start your dance journey! 💃</p>
-                <br>
-                <p>Best Regards,<br>Elite Dance Academy Team</p>
-                """
-            )
+            html = "<div style=\"font-family:Arial;padding:30px\"><h2 style=\"color:#e63946;text-align:center\">Thank You for Contacting Elite Dance Academy</h2><p>Hello <b>" + name + "</b>,</p><p>Thank you for reaching out to us.</p><p>Our mentor will review your request and contact you shortly.</p><p>We are excited to help you start your dance journey! &#128131;</p><br><p>Best Regards,<br>Elite Dance Academy Team</p></div>"
+            send_email(email, "We received your message | Elite Dance Academy", html)
         except Exception as mail_err:
             print("Email failed (non-fatal):", mail_err)
 
