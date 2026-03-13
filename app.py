@@ -109,7 +109,8 @@ def enroll():
             user_response = supabase.auth.get_user(token)
             if not user_response or not user_response.user:
                 return jsonify({"error": "Invalid or expired session. Please sign in again."}), 401
-        except Exception:
+        except Exception as auth_err:
+            print("Auth verification error:", auth_err)
             return jsonify({"error": "Session verification failed. Please sign in again."}), 401
 
         data = request.get_json()
@@ -152,7 +153,10 @@ def enroll():
           </div>
         </div>
         """
-        send_email(email, "Welcome to Elite Dance Academy 💃", email_body)
+        try:
+            send_email(email, "Welcome to Elite Dance Academy 💃", email_body)
+        except Exception as mail_err:
+            print("Email send error (non-fatal):", mail_err)
 
         return jsonify({
             "message": "Enrollment successful",
@@ -191,7 +195,10 @@ def contact():
         <br>
         <p>Best Regards,<br>Elite Dance Academy Team</p>
         """
-        send_email(email, "We received your message | Elite Dance Academy", student_email)
+        try:
+            send_email(email, "We received your message | Elite Dance Academy", student_email)
+        except Exception as mail_err:
+            print("Email send error (non-fatal):", mail_err)
 
         return jsonify({"message": "Message sent successfully"}), 200
 
