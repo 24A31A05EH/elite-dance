@@ -20,7 +20,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 EMAIL_SENDER = "srisrimehernayana@gmail.com"
 EMAIL_PASSWORD = "pfua xjfk vjfh pyts"
 
-# ----------------------------
+# -----------------------------
 # FLASK APP
 # -----------------------------
 app = Flask(
@@ -35,9 +35,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # EMAIL FUNCTION
 # ----------------------------------------------------
 def send_thank_you_email(user_email, user_name, dance_style):
-
     subject = "🎉 Welcome to Elite Dance Academy!"
-
     body = f"""
 Hi {user_name},
 
@@ -51,12 +49,10 @@ Keep Dancing!
 
 Elite Dance Academy
 """
-
     msg = MIMEMultipart()
     msg["From"] = EMAIL_SENDER
     msg["To"] = user_email
     msg["Subject"] = subject
-
     msg.attach(MIMEText(body, "plain"))
 
     try:
@@ -65,9 +61,7 @@ Elite Dance Academy
         server.login(EMAIL_SENDER, EMAIL_PASSWORD)
         server.sendmail(EMAIL_SENDER, user_email, msg.as_string())
         server.quit()
-
         print(f"✅ Email sent to {user_email}")
-
     except Exception as e:
         print("❌ Email sending failed:", e)
 
@@ -85,17 +79,9 @@ def home():
 def test_supabase():
     try:
         data = supabase.table("enrollments").select("*").limit(1).execute()
-
-        return jsonify({
-            "connected": True,
-            "data": data.data
-        })
-
+        return jsonify({"connected": True, "data": data.data})
     except Exception as e:
-        return jsonify({
-            "connected": False,
-            "error": str(e)
-        })
+        return jsonify({"connected": False, "error": str(e)})
 
 
 # ----------------------------------------------------
@@ -104,72 +90,36 @@ def test_supabase():
 @app.route("/enroll", methods=["POST"])
 def enroll():
 
-    # -----------------------------
     # 1️⃣ Check Authorization
-    # -----------------------------
     auth_header = request.headers.get("Authorization")
-
     if not auth_header or not auth_header.startswith("Bearer "):
-        return jsonify({
-            "error": "Authentication required. Please sign in."
-        }), 401
+        return jsonify({"error": "Authentication required. Please sign in."}), 401
 
     token = auth_header.split(" ")[1]
 
-    # -----------------------------
     # 2️⃣ Verify Supabase user
-    # -----------------------------
     try:
         auth_response = supabase.auth.get_user(token)
         user = auth_response.user
-
         if user is None:
-            return jsonify({
-                "error": "Invalid session. Please login again."
-            }), 403
-
+            return jsonify({"error": "Invalid session. Please login again."}), 403
     except Exception as e:
         print("[AUTH ERROR]", e)
+        return jsonify({"error": "Invalid or expired token"}), 403
 
-        return jsonify({
-            "error": "Invalid or expired token"
-        }), 403
-
-
-    # -----------------------------
     # 3️⃣ Parse JSON
-    # -----------------------------
     data = request.get_json()
-
     if not data:
-        return jsonify({
-            "error": "No enrollment data provided."
-        }), 400
+        return jsonify({"error": "No enrollment data provided."}), 400
 
-
-    required_fields = [
-        "name",
-        "email",
-        "phone",
-        "dance_style",
-        "experience_level"
-    ]
-
+    required_fields = ["name", "email", "phone", "dance_style", "experience_level"]
     missing = [f for f in required_fields if not data.get(f)]
-
     if missing:
-        return jsonify({
-            "error": f"Missing fields: {', '.join(missing)}"
-        }), 400
+        return jsonify({"error": f"Missing fields: {', '.join(missing)}"}), 400
 
-
-    # -----------------------------
     # 4️⃣ Insert into database
-    # -----------------------------
     try:
-
         response = supabase.table("enrollments").insert({
-
             "name": data.get("name"),
             "email": data.get("email"),
             "phone": data.get("phone"),
@@ -177,41 +127,72 @@ def enroll():
             "dance_style": data.get("dance_style"),
             "experience_level": data.get("experience_level"),
             "user_id": user.id
-
         }).execute()
 
-
-        # -----------------------------
-        # 5️⃣ SEND EMAIL AUTOMATICALLY
-        # -----------------------------
+        # 5️⃣ Send confirmation email
         send_thank_you_email(
             data.get("email"),
             data.get("name"),
             data.get("dance_style")
         )
 
-
-        return jsonify({
-            "message": "Enrollment successful!",
-            "data": response.data
-        }), 201
-
+        return jsonify({"message": "Enrollment successful!", "data": response.data}), 201
 
     except Exception as e:
-
         print("[DB ERROR]", e)
-
-        return jsonify({
-            "error": f"Database error: {str(e)}"
-        }), 500
+        return jsonify({"error": f"Database error: {str(e)}"}), 500
 
 
 # ----------------------------------------------------
-# RUN SERVER
+# ✅ CONTACT ROUTE (was missing — caused the crash!)
+# ----------------------------------------------------
+@app.route("/contact", methods=["POST"])
+def contact():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No data provided."}), 400
+
+    name    = data.get("name", "").strip()
+    email   = data.get("email", "").strip()
+    message = data.get("message", "").strip()
+
+    if not name or not email or not message:
+        return jsonify({"error": "All fields are required."}), 400
+
+    # Send email notification to academy
+    subject = f"🎓 Trial Class Request from {name}"
+    body = f"""
+New trial class request received!
+
+Name:    {name}
+Email:   {email}
+Message: {message}
+"""
+    msg = MIMEMultipart()
+    msg["From"]    = EMAIL_SENDER
+    msg["To"]      = EMAIL_SENDER  # Sends to yourself (the academy)
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
+
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        server.sendmail(EMAIL_SENDER, EMAIL_SENDER, msg.as_string())
+        server.quit()
+        print(f"✅ Contact form email received from {email}")
+    except Exception as e:
+        print("❌ Contact email failed:", e)
+        # Don't fail the request just because email failed
+        # The message is still received
+
+    return jsonify({"message": "Message received! A mentor will contact you soon."}), 200
+
+
+# ----------------------------------------------------
+# RUN SERVER (local dev only — Railway uses Gunicorn)
 # ----------------------------------------------------
 if __name__ == "__main__":
-    app.run(
-        host="127.0.0.1",
-        port=5000,
-        debug=True
-    )
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
