@@ -19,7 +19,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 # EMAIL CONFIG
 # -----------------------------
 EMAIL_SENDER = os.environ.get("GMAIL_USER", "srisrimehernayana@gmail.com")
-EMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD", "fdgm ladm gyqp sbcl")
+EMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD", "pfua xjfk vjfh pyts")
 
 # -----------------------------
 # FLASK APP
