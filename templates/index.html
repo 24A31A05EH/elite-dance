@@ -66,6 +66,26 @@
 
         @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 480px) { .hero-title { font-size: 3.5rem !important; } }
+
+        /* ── SECTION BACKGROUNDS ── */
+        .section-bg {
+            position: relative;
+            background-image: url('/static/background.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .section-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.82);
+            z-index: 0;
+        }
+        .section-bg > * {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -135,14 +155,14 @@
 </section>
 
 <!-- ABOUT -->
-<section id="about" class="py-16 md:py-20 px-4 md:px-6 max-w-7xl mx-auto">
-    <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+<section id="about" class="section-bg py-16 md:py-20 px-4 md:px-6">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-center">
         <div class="glass p-7 md:p-10 rounded-[2rem]">
             <h3 class="text-3xl md:text-4xl font-black mb-5 italic text-pink-500">The Legacy</h3>
-            <p class="text-gray-400 mb-6 leading-relaxed text-sm md:text-base">Elite Dance Academy isn't just a studio; it's a movement lab. Since 2010, we've trained over 5,000 dancers, from Broadway performers to competitive champions. We bridge the gap between traditional heritage and modern street culture.</p>
+            <p class="text-gray-300 mb-6 leading-relaxed text-sm md:text-base">Elite Dance Academy isn't just a studio; it's a movement lab. Since 2010, we've trained over 5,000 dancers, from Broadway performers to competitive champions. We bridge the gap between traditional heritage and modern street culture.</p>
             <div class="flex gap-8">
-                <div><h4 class="text-3xl font-black text-cyan-400">15+</h4><p class="text-[10px] uppercase text-gray-500">Master Trainers</p></div>
-                <div><h4 class="text-3xl font-black text-pink-500">22</h4><p class="text-[10px] uppercase text-gray-500">National Awards</p></div>
+                <div><h4 class="text-3xl font-black text-cyan-400">15+</h4><p class="text-[10px] uppercase text-gray-400">Master Trainers</p></div>
+                <div><h4 class="text-3xl font-black text-pink-500">22</h4><p class="text-[10px] uppercase text-gray-400">National Awards</p></div>
             </div>
         </div>
         <div class="space-y-4">
@@ -155,7 +175,7 @@
 </section>
 
 <!-- COURSES -->
-<section id="courses" class="py-16 md:py-20 px-4 md:px-6 bg-black/40">
+<section id="courses" class="section-bg py-16 md:py-20 px-4 md:px-6">
     <div class="max-w-7xl mx-auto">
         <h2 class="text-center text-3xl md:text-4xl font-black mb-10 italic uppercase">The <span class="text-cyan-400">Curriculum</span></h2>
         <div id="dance-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"></div>
@@ -163,10 +183,10 @@
 </section>
 
 <!-- TESTIMONIALS -->
-<section id="testimonials" class="py-16 md:py-24 px-0 overflow-hidden" style="background: linear-gradient(to bottom, #000, #050505);">
+<section id="testimonials" class="section-bg py-16 md:py-24 px-0 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
         <h2 class="text-center text-3xl md:text-4xl font-black mb-2 italic uppercase">What Our <span class="text-pink-500">Dancers</span> Say</h2>
-        <p class="text-center text-gray-500 text-xs mb-12 uppercase tracking-widest">Real students. Real journeys.</p>
+        <p class="text-center text-gray-400 text-xs mb-12 uppercase tracking-widest">Real students. Real journeys.</p>
     </div>
     <div class="overflow-hidden mb-6">
         <div class="marquee-track">
@@ -186,24 +206,24 @@
     </div>
     <div class="max-w-7xl mx-auto px-4 md:px-6">
         <div class="mt-12 glass rounded-3xl p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-5 text-center stats-grid">
-            <div><h4 class="text-2xl md:text-3xl font-black text-cyan-400">5,000+</h4><p class="text-[10px] uppercase text-gray-500 mt-1 tracking-widest">Students Trained</p></div>
-            <div><h4 class="text-2xl md:text-3xl font-black text-pink-500">4.9★</h4><p class="text-[10px] uppercase text-gray-500 mt-1 tracking-widest">Average Rating</p></div>
-            <div><h4 class="text-2xl md:text-3xl font-black text-purple-400">98%</h4><p class="text-[10px] uppercase text-gray-500 mt-1 tracking-widest">Would Recommend</p></div>
-            <div><h4 class="text-2xl md:text-3xl font-black text-orange-400">340+</h4><p class="text-[10px] uppercase text-gray-500 mt-1 tracking-widest">Reviews Written</p></div>
+            <div><h4 class="text-2xl md:text-3xl font-black text-cyan-400">5,000+</h4><p class="text-[10px] uppercase text-gray-400 mt-1 tracking-widest">Students Trained</p></div>
+            <div><h4 class="text-2xl md:text-3xl font-black text-pink-500">4.9★</h4><p class="text-[10px] uppercase text-gray-400 mt-1 tracking-widest">Average Rating</p></div>
+            <div><h4 class="text-2xl md:text-3xl font-black text-purple-400">98%</h4><p class="text-[10px] uppercase text-gray-400 mt-1 tracking-widest">Would Recommend</p></div>
+            <div><h4 class="text-2xl md:text-3xl font-black text-orange-400">340+</h4><p class="text-[10px] uppercase text-gray-400 mt-1 tracking-widest">Reviews Written</p></div>
         </div>
     </div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="py-16 md:py-20 px-4 md:px-6 bg-white/[0.02]">
+<section id="contact" class="section-bg py-16 md:py-20 px-4 md:px-6">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 md:gap-12">
         <div>
             <h3 class="text-3xl md:text-4xl font-black mb-5 uppercase italic text-cyan-400">Elite Advantage</h3>
-            <p class="text-gray-400 mb-8 text-sm md:text-base">Our studios are equipped with professional shock-absorbent flooring, surround sound acoustics, and personalized feedback systems.</p>
+            <p class="text-gray-300 mb-8 text-sm md:text-base">Our studios are equipped with professional shock-absorbent flooring, surround sound acoustics, and personalized feedback systems.</p>
             <div class="space-y-5">
-                <div class="flex items-start gap-4"><span class="text-2xl mt-1">📍</span><div><h5 class="font-bold text-sm">Main Studio</h5><p class="text-gray-500 text-sm">101 Elite Plaza, Bandra West, Mumbai</p></div></div>
-                <div class="flex items-start gap-4"><span class="text-2xl mt-1">✉️</span><div><h5 class="font-bold text-sm">Email Us</h5><p class="text-gray-500 text-sm">admissions@elitedance.com</p></div></div>
-                <div class="flex items-start gap-4"><span class="text-2xl mt-1">📞</span><div><h5 class="font-bold text-sm">Call Support</h5><p class="text-gray-500 text-sm">+91 90000 12345</p></div></div>
+                <div class="flex items-start gap-4"><span class="text-2xl mt-1">📍</span><div><h5 class="font-bold text-sm">Main Studio</h5><p class="text-gray-400 text-sm">101 Elite Plaza, Bandra West, Mumbai</p></div></div>
+                <div class="flex items-start gap-4"><span class="text-2xl mt-1">✉️</span><div><h5 class="font-bold text-sm">Email Us</h5><p class="text-gray-400 text-sm">admissions@elitedance.com</p></div></div>
+                <div class="flex items-start gap-4"><span class="text-2xl mt-1">📞</span><div><h5 class="font-bold text-sm">Call Support</h5><p class="text-gray-400 text-sm">+91 90000 12345</p></div></div>
             </div>
         </div>
         <div class="glass p-6 md:p-8 rounded-3xl space-y-4 border-t-4 border-pink-500">
@@ -270,12 +290,10 @@
         <form id="enrollmentForm" class="space-y-3">
             <input type="text" id="name" placeholder="Full Name" required class="p-4 rounded-xl outline-none">
             <input type="email" id="email" placeholder="Email Address" required class="p-4 rounded-xl outline-none">
-            <!-- ✅ Phone: only digits, max 10 -->
             <input type="tel" id="phone" placeholder="Phone Number (10 digits)" required maxlength="10"
                 oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
                 class="p-4 rounded-xl outline-none">
             <div class="grid grid-cols-2 gap-3">
-                <!-- ✅ Age: max 2 digits, 1-99 only -->
                 <input type="number" id="age" placeholder="Age" min="1" max="99"
                     oninput="if(this.value.length>2)this.value=this.value.slice(0,2);if(parseInt(this.value)>99)this.value=99;if(parseInt(this.value)<1&&this.value!='')this.value=1"
                     class="p-4 rounded-xl outline-none">
@@ -293,7 +311,6 @@
 </div>
 
 <script>
-// ─── MOBILE MENU ─────────────────────────────────────────────
 function toggleMenu() {
     document.getElementById('mobile-menu').classList.toggle('open');
 }
@@ -306,7 +323,6 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     });
 });
 
-// ─── SUPABASE INIT ────────────────────────────────────────────
 const SUPABASE_URL = "https://yhvnbwwxlkbccishcuue.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlodm5id3d4bGtiY2Npc2hjdXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MjIyODksImV4cCI6MjA4ODE5ODI4OX0.F4TFa8Bh6APz25gasQN8JvGwcx5QZyTqr-UZxMUIug0";
 const SITE_URL = "https://web-production-93d2c.up.railway.app";
@@ -343,7 +359,6 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
     }
 });
 
-// ─── AUTH UI ──────────────────────────────────────────────────
 function updateAuthUI(session) {
     const loginWrap   = document.getElementById('login-btn-wrap');
     const userDisplay = document.getElementById('user-display');
@@ -388,7 +403,6 @@ async function signOut() {
     if (error) console.error('Sign-out error:', error.message);
 }
 
-// ─── DANCE DATA ───────────────────────────────────────────────
 const danceData = {
     'Bharatanatyam': { icon:'🕉️', accent:'accent-pink',   fee:'₹2,500/mo', bg:'/static/bharatanatyam.jpeg', desc:'A major form of Indian classical dance that originated in Tamil Nadu. Known for its fixed upper torso, bent legs, and flexed knees combined with spectacular footwork.', mastery:['Hand Gestures (Mudras)','Facial Expressions (Abhinaya)','Rhythmic Patterns (Tala)','Traditional Arangetram Prep'] },
     'Hip Hop':       { icon:'👟', accent:'accent-cyan',    fee:'₹3,000/mo', bg:'/static/hiphop.jpeg',        desc:'Vibrant street dance styles primarily performed to hip-hop music. Covers foundation of urban movement and personal freestyle expression.', mastery:['Popping & Locking','Breaking Foundations','Choreography Memory','Freestyle Battle Tactics'] },
@@ -415,7 +429,6 @@ Object.keys(danceData).forEach(style => {
     styleSelect.innerHTML += `<option value="${style}">${style}</option>`;
 });
 
-// ─── MODALS ───────────────────────────────────────────────────
 function showDetails(style) {
     const d = danceData[style];
     document.getElementById('detail-title').innerText       = style;
@@ -451,7 +464,6 @@ function closeEnroll() {
 
 function switchToEnroll() { closeDetails(); showEnroll(); }
 
-// ─── ENROLL FORM ──────────────────────────────────────────────
 document.getElementById('enrollmentForm').onsubmit = async (e) => {
     e.preventDefault();
     const msg = document.getElementById('status-msg');
@@ -464,7 +476,6 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
         return;
     }
 
-    // ✅ Phone validation
     const phoneVal = document.getElementById('phone').value.trim();
     if (!/^\d{10}$/.test(phoneVal)) {
         msg.style.color = 'red';
@@ -472,7 +483,6 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
         return;
     }
 
-    // ✅ Age validation
     const ageVal = document.getElementById('age').value;
     if (ageVal && (parseInt(ageVal) < 1 || parseInt(ageVal) > 99)) {
         msg.style.color = 'red';
@@ -523,7 +533,6 @@ document.getElementById('enrollmentForm').onsubmit = async (e) => {
     }
 };
 
-// ─── CONTACT FORM ─────────────────────────────────────────────
 async function submitContactForm() {
     const name    = document.getElementById('contact-name').value.trim();
     const email   = document.getElementById('contact-email').value.trim();
