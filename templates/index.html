@@ -67,6 +67,25 @@
         @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 480px) { .hero-title { font-size: 3.5rem !important; } }
 
+        /* Dimmed background for sections */
+        .dim-bg {
+            position: relative;
+        }
+        .dim-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('/static/backround.jpeg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.25);
+            z-index: 0;
+        }
+        .dim-bg > * {
+            position: relative;
+            z-index: 1;
+        }
+
 
     </style>
 </head>
@@ -137,7 +156,7 @@
 </section>
 
 <!-- ABOUT -->
-<section id="about" style="background-image: url('/static/backround.jpeg'); background-size: cover; background-position: center;" class="py-16 md:py-20 px-4 md:px-6">
+<section id="about" class="dim-bg py-16 md:py-20 px-4 md:px-6">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-center">
         <div class="glass p-7 md:p-10 rounded-[2rem]">
             <h3 class="text-3xl md:text-4xl font-black mb-5 italic text-pink-500">The Legacy</h3>
@@ -157,7 +176,7 @@
 </section>
 
 <!-- COURSES — unchanged from original -->
-<section id="courses" class="py-16 md:py-20 px-4 md:px-6 bg-black/40">
+<section id="courses" class="dim-bg py-16 md:py-20 px-4 md:px-6">
     <div class="max-w-7xl mx-auto">
         <h2 class="text-center text-3xl md:text-4xl font-black mb-10 italic uppercase">The <span class="text-cyan-400">Curriculum</span></h2>
         <div id="dance-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"></div>
@@ -165,7 +184,7 @@
 </section>
 
 <!-- TESTIMONIALS -->
-<section id="testimonials" style="background-image: url('/static/backround.jpeg'); background-size: cover; background-position: center;" class="py-16 md:py-24 px-0 overflow-hidden">
+<section id="testimonials" class="dim-bg py-16 md:py-24 px-0 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
         <h2 class="text-center text-3xl md:text-4xl font-black mb-2 italic uppercase">What Our <span class="text-pink-500">Dancers</span> Say</h2>
         <p class="text-center text-gray-500 text-xs mb-12 uppercase tracking-widest">Real students. Real journeys.</p>
@@ -197,7 +216,7 @@
 </section>
 
 <!-- CONTACT -->
-<section id="contact" style="background-image: url('/static/backround.jpeg'); background-size: cover; background-position: center;" class="py-16 md:py-20 px-4 md:px-6">
+<section id="contact" class="dim-bg py-16 md:py-20 px-4 md:px-6">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 md:gap-12">
         <div>
             <h3 class="text-3xl md:text-4xl font-black mb-5 uppercase italic text-cyan-400">Elite Advantage</h3>
