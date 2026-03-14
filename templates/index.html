@@ -67,24 +67,12 @@
         @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 480px) { .hero-title { font-size: 3.5rem !important; } }
 
-        /* ── SECTION BACKGROUNDS ── */
-        .section-bg {
-            position: relative;
+        /* Background image for About, Testimonials, Contact only */
+        .has-bg {
             background-image: url('/static/background.jpeg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
-        }
-        .section-bg::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.82);
-            z-index: 0;
-        }
-        .section-bg > * {
-            position: relative;
-            z-index: 1;
+            background-repeat: no-repeat;
         }
     </style>
 </head>
@@ -155,14 +143,14 @@
 </section>
 
 <!-- ABOUT -->
-<section id="about" class="section-bg py-16 md:py-20 px-4 md:px-6">
+<section id="about" class="has-bg py-16 md:py-20 px-4 md:px-6" style="background-color: rgba(5,5,5,0.85); background-blend-mode: darken;">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-center">
         <div class="glass p-7 md:p-10 rounded-[2rem]">
             <h3 class="text-3xl md:text-4xl font-black mb-5 italic text-pink-500">The Legacy</h3>
-            <p class="text-gray-300 mb-6 leading-relaxed text-sm md:text-base">Elite Dance Academy isn't just a studio; it's a movement lab. Since 2010, we've trained over 5,000 dancers, from Broadway performers to competitive champions. We bridge the gap between traditional heritage and modern street culture.</p>
+            <p class="text-gray-400 mb-6 leading-relaxed text-sm md:text-base">Elite Dance Academy isn't just a studio; it's a movement lab. Since 2010, we've trained over 5,000 dancers, from Broadway performers to competitive champions. We bridge the gap between traditional heritage and modern street culture.</p>
             <div class="flex gap-8">
-                <div><h4 class="text-3xl font-black text-cyan-400">15+</h4><p class="text-[10px] uppercase text-gray-400">Master Trainers</p></div>
-                <div><h4 class="text-3xl font-black text-pink-500">22</h4><p class="text-[10px] uppercase text-gray-400">National Awards</p></div>
+                <div><h4 class="text-3xl font-black text-cyan-400">15+</h4><p class="text-[10px] uppercase text-gray-500">Master Trainers</p></div>
+                <div><h4 class="text-3xl font-black text-pink-500">22</h4><p class="text-[10px] uppercase text-gray-500">National Awards</p></div>
             </div>
         </div>
         <div class="space-y-4">
@@ -174,8 +162,8 @@
     </div>
 </section>
 
-<!-- COURSES -->
-<section id="courses" class="section-bg py-16 md:py-20 px-4 md:px-6">
+<!-- COURSES — unchanged from original -->
+<section id="courses" class="py-16 md:py-20 px-4 md:px-6 bg-black/40">
     <div class="max-w-7xl mx-auto">
         <h2 class="text-center text-3xl md:text-4xl font-black mb-10 italic uppercase">The <span class="text-cyan-400">Curriculum</span></h2>
         <div id="dance-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"></div>
@@ -183,10 +171,10 @@
 </section>
 
 <!-- TESTIMONIALS -->
-<section id="testimonials" class="section-bg py-16 md:py-24 px-0 overflow-hidden">
+<section id="testimonials" class="has-bg py-16 md:py-24 px-0 overflow-hidden" style="background-color: rgba(5,5,5,0.85); background-blend-mode: darken;">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
         <h2 class="text-center text-3xl md:text-4xl font-black mb-2 italic uppercase">What Our <span class="text-pink-500">Dancers</span> Say</h2>
-        <p class="text-center text-gray-400 text-xs mb-12 uppercase tracking-widest">Real students. Real journeys.</p>
+        <p class="text-center text-gray-500 text-xs mb-12 uppercase tracking-widest">Real students. Real journeys.</p>
     </div>
     <div class="overflow-hidden mb-6">
         <div class="marquee-track">
@@ -206,24 +194,24 @@
     </div>
     <div class="max-w-7xl mx-auto px-4 md:px-6">
         <div class="mt-12 glass rounded-3xl p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-5 text-center stats-grid">
-            <div><h4 class="text-2xl md:text-3xl font-black text-cyan-400">5,000+</h4><p class="text-[10px] uppercase text-gray-400 mt-1 tracking-widest">Students Trained</p></div>
-            <div><h4 class="text-2xl md:text-3xl font-black text-pink-500">4.9★</h4><p class="text-[10px] uppercase text-gray-400 mt-1 tracking-widest">Average Rating</p></div>
-            <div><h4 class="text-2xl md:text-3xl font-black text-purple-400">98%</h4><p class="text-[10px] uppercase text-gray-400 mt-1 tracking-widest">Would Recommend</p></div>
-            <div><h4 class="text-2xl md:text-3xl font-black text-orange-400">340+</h4><p class="text-[10px] uppercase text-gray-400 mt-1 tracking-widest">Reviews Written</p></div>
+            <div><h4 class="text-2xl md:text-3xl font-black text-cyan-400">5,000+</h4><p class="text-[10px] uppercase text-gray-500 mt-1 tracking-widest">Students Trained</p></div>
+            <div><h4 class="text-2xl md:text-3xl font-black text-pink-500">4.9★</h4><p class="text-[10px] uppercase text-gray-500 mt-1 tracking-widest">Average Rating</p></div>
+            <div><h4 class="text-2xl md:text-3xl font-black text-purple-400">98%</h4><p class="text-[10px] uppercase text-gray-500 mt-1 tracking-widest">Would Recommend</p></div>
+            <div><h4 class="text-2xl md:text-3xl font-black text-orange-400">340+</h4><p class="text-[10px] uppercase text-gray-500 mt-1 tracking-widest">Reviews Written</p></div>
         </div>
     </div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="section-bg py-16 md:py-20 px-4 md:px-6">
+<section id="contact" class="has-bg py-16 md:py-20 px-4 md:px-6" style="background-color: rgba(5,5,5,0.85); background-blend-mode: darken;">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 md:gap-12">
         <div>
             <h3 class="text-3xl md:text-4xl font-black mb-5 uppercase italic text-cyan-400">Elite Advantage</h3>
-            <p class="text-gray-300 mb-8 text-sm md:text-base">Our studios are equipped with professional shock-absorbent flooring, surround sound acoustics, and personalized feedback systems.</p>
+            <p class="text-gray-400 mb-8 text-sm md:text-base">Our studios are equipped with professional shock-absorbent flooring, surround sound acoustics, and personalized feedback systems.</p>
             <div class="space-y-5">
-                <div class="flex items-start gap-4"><span class="text-2xl mt-1">📍</span><div><h5 class="font-bold text-sm">Main Studio</h5><p class="text-gray-400 text-sm">101 Elite Plaza, Bandra West, Mumbai</p></div></div>
-                <div class="flex items-start gap-4"><span class="text-2xl mt-1">✉️</span><div><h5 class="font-bold text-sm">Email Us</h5><p class="text-gray-400 text-sm">admissions@elitedance.com</p></div></div>
-                <div class="flex items-start gap-4"><span class="text-2xl mt-1">📞</span><div><h5 class="font-bold text-sm">Call Support</h5><p class="text-gray-400 text-sm">+91 90000 12345</p></div></div>
+                <div class="flex items-start gap-4"><span class="text-2xl mt-1">📍</span><div><h5 class="font-bold text-sm">Main Studio</h5><p class="text-gray-500 text-sm">101 Elite Plaza, Bandra West, Mumbai</p></div></div>
+                <div class="flex items-start gap-4"><span class="text-2xl mt-1">✉️</span><div><h5 class="font-bold text-sm">Email Us</h5><p class="text-gray-500 text-sm">admissions@elitedance.com</p></div></div>
+                <div class="flex items-start gap-4"><span class="text-2xl mt-1">📞</span><div><h5 class="font-bold text-sm">Call Support</h5><p class="text-gray-500 text-sm">+91 90000 12345</p></div></div>
             </div>
         </div>
         <div class="glass p-6 md:p-8 rounded-3xl space-y-4 border-t-4 border-pink-500">
@@ -311,10 +299,7 @@
 </div>
 
 <script>
-function toggleMenu() {
-    document.getElementById('mobile-menu').classList.toggle('open');
-}
-
+function toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
 document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', function(e) {
         e.preventDefault();
@@ -322,87 +307,36 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 });
-
 const SUPABASE_URL = "https://yhvnbwwxlkbccishcuue.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlodm5id3d4bGtiY2Npc2hjdXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MjIyODksImV4cCI6MjA4ODE5ODI4OX0.F4TFa8Bh6APz25gasQN8JvGwcx5QZyTqr-UZxMUIug0";
 const SITE_URL = "https://web-production-93d2c.up.railway.app";
-
 const { createClient } = supabase;
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { persistSession: true, detectSessionInUrl: true }
-});
-
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, detectSessionInUrl: true } });
 let currentSession = null;
-
-supabaseClient.auth.getSession().then(({ data: { session } }) => {
-    currentSession = session;
-    updateAuthUI(session);
-    if (session) prefillForm(session.user);
-});
-
+supabaseClient.auth.getSession().then(({ data: { session } }) => { currentSession = session; updateAuthUI(session); if (session) prefillForm(session.user); });
 supabaseClient.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN') {
-        currentSession = session;
-        updateAuthUI(session);
-        prefillForm(session.user);
-        if (sessionStorage.getItem('pendingEnroll')) {
-            sessionStorage.removeItem('pendingEnroll');
-            document.getElementById('auth-gate').classList.add('hidden');
-            setTimeout(showEnroll, 400);
-        }
-    }
-    if (event === 'SIGNED_OUT') {
-        currentSession = null;
-        updateAuthUI(null);
-        document.getElementById('name').value  = '';
-        document.getElementById('email').value = '';
-    }
+    if (event === 'SIGNED_IN') { currentSession = session; updateAuthUI(session); prefillForm(session.user); if (sessionStorage.getItem('pendingEnroll')) { sessionStorage.removeItem('pendingEnroll'); document.getElementById('auth-gate').classList.add('hidden'); setTimeout(showEnroll, 400); } }
+    if (event === 'SIGNED_OUT') { currentSession = null; updateAuthUI(null); document.getElementById('name').value = ''; document.getElementById('email').value = ''; }
 });
-
 function updateAuthUI(session) {
-    const loginWrap   = document.getElementById('login-btn-wrap');
+    const loginWrap = document.getElementById('login-btn-wrap');
     const userDisplay = document.getElementById('user-display');
     if (session && session.user) {
         const meta = session.user.user_metadata || {};
         const displayName = meta.full_name || meta.name || session.user.email;
         const avatarUrl = meta.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(displayName) + '&background=ff007f&color=fff';
-        loginWrap.classList.add('hidden');
-        userDisplay.classList.remove('hidden');
-        document.getElementById('user-name').textContent         = displayName;
-        document.getElementById('user-avatar').src               = avatarUrl;
-        document.getElementById('enroll-avatar').src             = avatarUrl;
-        document.getElementById('enroll-user-name').textContent  = displayName;
+        loginWrap.classList.add('hidden'); userDisplay.classList.remove('hidden');
+        document.getElementById('user-name').textContent = displayName;
+        document.getElementById('user-avatar').src = avatarUrl;
+        document.getElementById('enroll-avatar').src = avatarUrl;
+        document.getElementById('enroll-user-name').textContent = displayName;
         document.getElementById('enroll-user-email').textContent = session.user.email;
-    } else {
-        loginWrap.classList.remove('hidden');
-        userDisplay.classList.add('hidden');
-    }
+    } else { loginWrap.classList.remove('hidden'); userDisplay.classList.add('hidden'); }
 }
-
-function prefillForm(user) {
-    const meta = user.user_metadata || {};
-    document.getElementById('name').value  = meta.full_name || meta.name || '';
-    document.getElementById('email').value = user.email || '';
-}
-
-async function signInWithGoogle() {
-    const { error } = await supabaseClient.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: SITE_URL + '/' }
-    });
-    if (error) alert('Sign-in error: ' + error.message);
-}
-
-function signInFromGate() {
-    sessionStorage.setItem('pendingEnroll', '1');
-    signInWithGoogle();
-}
-
-async function signOut() {
-    const { error } = await supabaseClient.auth.signOut();
-    if (error) console.error('Sign-out error:', error.message);
-}
-
+function prefillForm(user) { const meta = user.user_metadata || {}; document.getElementById('name').value = meta.full_name || meta.name || ''; document.getElementById('email').value = user.email || ''; }
+async function signInWithGoogle() { const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: SITE_URL + '/' } }); if (error) alert('Sign-in error: ' + error.message); }
+function signInFromGate() { sessionStorage.setItem('pendingEnroll', '1'); signInWithGoogle(); }
+async function signOut() { const { error } = await supabaseClient.auth.signOut(); if (error) console.error('Sign-out error:', error.message); }
 const danceData = {
     'Bharatanatyam': { icon:'🕉️', accent:'accent-pink',   fee:'₹2,500/mo', bg:'/static/bharatanatyam.jpeg', desc:'A major form of Indian classical dance that originated in Tamil Nadu. Known for its fixed upper torso, bent legs, and flexed knees combined with spectacular footwork.', mastery:['Hand Gestures (Mudras)','Facial Expressions (Abhinaya)','Rhythmic Patterns (Tala)','Traditional Arangetram Prep'] },
     'Hip Hop':       { icon:'👟', accent:'accent-cyan',    fee:'₹3,000/mo', bg:'/static/hiphop.jpeg',        desc:'Vibrant street dance styles primarily performed to hip-hop music. Covers foundation of urban movement and personal freestyle expression.', mastery:['Popping & Locking','Breaking Foundations','Choreography Memory','Freestyle Battle Tactics'] },
@@ -414,170 +348,68 @@ const danceData = {
     'Kuchipudi':     { icon:'✨', accent:'accent-orange',  fee:'₹2,500/mo', bg:'/static/kuchipudi.png',     desc:'One of the eight major Indian classical dances — a dance-drama rooted in the ancient Natya Shastra.', mastery:['Tarangam (Dancing on plate)','Dramatic Speech','Symmetry & Grace','Classical Literature'] },
     'Freestyle':     { icon:'🌀', accent:'accent-indigo',  fee:'₹2,800/mo', bg:'/static/freestyle.png',     desc:'Unrestricted, expressive movement drawn from multiple dance styles. Build your own unique performance identity.', mastery:['Improvisation','Style Fusion','Stage Confidence','Personal Choreography'] }
 };
-
-const grid        = document.getElementById('dance-grid');
+const grid = document.getElementById('dance-grid');
 const styleSelect = document.getElementById('dance_style');
-
 Object.keys(danceData).forEach(style => {
     const d = danceData[style];
-    grid.innerHTML += `
-        <div class="dance-card ${d.accent} p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('${style}')">
-            <div class="text-3xl md:text-4xl mb-3">${d.icon}</div>
-            <h4 class="text-lg md:text-2xl font-bold mb-1 italic">${style}</h4>
-            <p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p>
-        </div>`;
+    grid.innerHTML += `<div class="dance-card ${d.accent} p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('${style}')"><div class="text-3xl md:text-4xl mb-3">${d.icon}</div><h4 class="text-lg md:text-2xl font-bold mb-1 italic">${style}</h4><p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p></div>`;
     styleSelect.innerHTML += `<option value="${style}">${style}</option>`;
 });
-
 function showDetails(style) {
     const d = danceData[style];
-    document.getElementById('detail-title').innerText       = style;
-    document.getElementById('detail-icon').innerText        = d.icon;
-    document.getElementById('detail-fee').innerText         = 'Tuition: ' + d.fee;
+    document.getElementById('detail-title').innerText = style;
+    document.getElementById('detail-icon').innerText = d.icon;
+    document.getElementById('detail-fee').innerText = 'Tuition: ' + d.fee;
     document.getElementById('detail-description').innerText = d.desc;
-    document.getElementById('detail-mastery').innerHTML     = d.mastery.map(i => `<li class="flex items-start gap-1">✅ ${i}</li>`).join('');
-    document.getElementById('dance_style').value            = style;
+    document.getElementById('detail-mastery').innerHTML = d.mastery.map(i => `<li class="flex items-start gap-1">✅ ${i}</li>`).join('');
+    document.getElementById('dance_style').value = style;
     document.getElementById('detail-modal-bg').style.backgroundImage = `url('${d.bg}')`;
     document.getElementById('detail-modal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
-
-function closeDetails() {
-    document.getElementById('detail-modal').classList.add('hidden');
-    document.body.style.overflow = '';
-}
-
+function closeDetails() { document.getElementById('detail-modal').classList.add('hidden'); document.body.style.overflow = ''; }
 function showEnroll() {
-    if (!currentSession) {
-        document.getElementById('auth-gate').classList.remove('hidden');
-        return;
-    }
+    if (!currentSession) { document.getElementById('auth-gate').classList.remove('hidden'); return; }
     updateAuthUI(currentSession);
     document.getElementById('enroll-modal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
-
-function closeEnroll() {
-    document.getElementById('enroll-modal').classList.add('hidden');
-    document.body.style.overflow = '';
-}
-
+function closeEnroll() { document.getElementById('enroll-modal').classList.add('hidden'); document.body.style.overflow = ''; }
 function switchToEnroll() { closeDetails(); showEnroll(); }
-
 document.getElementById('enrollmentForm').onsubmit = async (e) => {
     e.preventDefault();
     const msg = document.getElementById('status-msg');
     const { data: { session } } = await supabaseClient.auth.getSession();
-
-    if (!session) {
-        msg.style.color = 'red';
-        msg.innerText = 'Session expired. Please sign in again.';
-        setTimeout(() => { closeEnroll(); document.getElementById('auth-gate').classList.remove('hidden'); }, 1500);
-        return;
-    }
-
+    if (!session) { msg.style.color = 'red'; msg.innerText = 'Session expired. Please sign in again.'; setTimeout(() => { closeEnroll(); document.getElementById('auth-gate').classList.remove('hidden'); }, 1500); return; }
     const phoneVal = document.getElementById('phone').value.trim();
-    if (!/^\d{10}$/.test(phoneVal)) {
-        msg.style.color = 'red';
-        msg.innerText = 'Phone number must be exactly 10 digits.';
-        return;
-    }
-
+    if (!/^\d{10}$/.test(phoneVal)) { msg.style.color = 'red'; msg.innerText = 'Phone number must be exactly 10 digits.'; return; }
     const ageVal = document.getElementById('age').value;
-    if (ageVal && (parseInt(ageVal) < 1 || parseInt(ageVal) > 99)) {
-        msg.style.color = 'red';
-        msg.innerText = 'Please enter a valid age between 1 and 99.';
-        return;
-    }
-
-    msg.style.color = '#aaa';
-    msg.innerText = 'Processing...';
-
-    const payload = {
-        name:             document.getElementById('name').value.trim(),
-        email:            document.getElementById('email').value.trim(),
-        phone:            phoneVal,
-        age:              ageVal ? parseInt(ageVal) : null,
-        dance_style:      document.getElementById('dance_style').value,
-        experience_level: document.getElementById('experience_level').value
-    };
-
+    if (ageVal && (parseInt(ageVal) < 1 || parseInt(ageVal) > 99)) { msg.style.color = 'red'; msg.innerText = 'Please enter a valid age between 1 and 99.'; return; }
+    msg.style.color = '#aaa'; msg.innerText = 'Processing...';
+    const payload = { name: document.getElementById('name').value.trim(), email: document.getElementById('email').value.trim(), phone: phoneVal, age: ageVal ? parseInt(ageVal) : null, dance_style: document.getElementById('dance_style').value, experience_level: document.getElementById('experience_level').value };
     try {
-        const res = await fetch('/enroll', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.access_token}`
-            },
-            body: JSON.stringify(payload)
-        });
-
+        const res = await fetch('/enroll', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, body: JSON.stringify(payload) });
         const result = await res.json();
-
-        if (res.ok) {
-            msg.style.color = '#00f2ff';
-            msg.innerText = '🎉 Welcome to the Academy! Check your email for confirmation.';
-            setTimeout(() => {
-                document.getElementById('enrollmentForm').reset();
-                msg.innerText = '';
-                closeEnroll();
-            }, 3500);
-        } else {
-            msg.style.color = 'red';
-            msg.innerText = result.error || 'Submission failed. Please try again.';
-        }
-    } catch (err) {
-        console.error(err);
-        msg.style.color = 'red';
-        msg.innerText = 'Server error. Try again.';
-    }
+        if (res.ok) { msg.style.color = '#00f2ff'; msg.innerText = '🎉 Welcome to the Academy! Check your email for confirmation.'; setTimeout(() => { document.getElementById('enrollmentForm').reset(); msg.innerText = ''; closeEnroll(); }, 3500); }
+        else { msg.style.color = 'red'; msg.innerText = result.error || 'Submission failed. Please try again.'; }
+    } catch (err) { msg.style.color = 'red'; msg.innerText = 'Server error. Try again.'; }
 };
-
 async function submitContactForm() {
-    const name    = document.getElementById('contact-name').value.trim();
-    const email   = document.getElementById('contact-email').value.trim();
+    const name = document.getElementById('contact-name').value.trim();
+    const email = document.getElementById('contact-email').value.trim();
     const message = document.getElementById('contact-message').value.trim();
-    const status  = document.getElementById('contact-status');
-
-    if (!name || !email || !message) {
-        status.style.color = 'red';
-        status.innerText = 'Please fill in all fields.';
-        return;
-    }
-
-    status.style.color = '#aaa';
-    status.innerText = 'Sending...';
-
+    const status = document.getElementById('contact-status');
+    if (!name || !email || !message) { status.style.color = 'red'; status.innerText = 'Please fill in all fields.'; return; }
+    status.style.color = '#aaa'; status.innerText = 'Sending...';
     try {
-        const res = await fetch('/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, message })
-        });
+        const res = await fetch('/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, message }) });
         const result = await res.json();
-        if (res.ok) {
-            status.style.color = '#00f2ff';
-            status.innerText = '✅ Message sent! A mentor will contact you soon.';
-            document.getElementById('contact-name').value    = '';
-            document.getElementById('contact-email').value   = '';
-            document.getElementById('contact-message').value = '';
-        } else {
-            status.style.color = 'red';
-            status.innerText = result.error || 'Failed to send. Try again.';
-        }
-    } catch (err) {
-        console.error("Contact form error:", err);
-        status.style.color = 'red';
-        status.innerText = 'Server error. Try again.';
-    }
+        if (res.ok) { status.style.color = '#00f2ff'; status.innerText = '✅ Message sent! A mentor will contact you soon.'; document.getElementById('contact-name').value = ''; document.getElementById('contact-email').value = ''; document.getElementById('contact-message').value = ''; }
+        else { status.style.color = 'red'; status.innerText = result.error || 'Failed to send. Try again.'; }
+    } catch (err) { status.style.color = 'red'; status.innerText = 'Server error. Try again.'; }
 }
-
-document.getElementById('detail-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeDetails();
-});
-document.getElementById('enroll-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeEnroll();
-});
+document.getElementById('detail-modal').addEventListener('click', function(e) { if (e.target === this) closeDetails(); });
+document.getElementById('enroll-modal').addEventListener('click', function(e) { if (e.target === this) closeEnroll(); });
 </script>
 </body>
 </html>
