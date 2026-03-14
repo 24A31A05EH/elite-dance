@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --neon-pink: #ff007f; --neon-cyan: #00f2ff; --dark-bg: #050505; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -384,13 +384,15 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 const SUPABASE_URL = "https://yhvnbwwxlkbccishcuue.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlodm5id3d4bGtiY2Npc2hjdXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MjIyODksImV4cCI6MjA4ODE5ODI4OX0.F4TFa8Bh6APz25gasQN8JvGwcx5QZyTqr-UZxMUIug0";
 const SITE_URL = "https://web-production-93d2c.up.railway.app";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, detectSessionInUrl: true } });
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, detectSessionInUrl: true } });
 let currentSession = null;
 supabaseClient.auth.getSession().then(({ data: { session } }) => { currentSession = session; updateAuthUI(session); if (session) prefillForm(session.user); });
 supabaseClient.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN') { currentSession = session; updateAuthUI(session); prefillForm(session.user); if (sessionStorage.getItem('pendingEnroll')) { sessionStorage.removeItem('pendingEnroll'); document.getElementById('auth-gate').classList.add('hidden'); setTimeout(showEnroll, 400); } }
     if (event === 'SIGNED_OUT') { currentSession = null; updateAuthUI(null); document.getElementById('name').value = ''; document.getElementById('email').value = ''; }
 });
+
 function updateAuthUI(session) {
     const loginWrap = document.getElementById('login-btn-wrap');
     const userDisplay = document.getElementById('user-display');
