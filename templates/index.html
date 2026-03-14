@@ -66,6 +66,20 @@
 
         @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 480px) { .hero-title { font-size: 3.5rem !important; } }
+
+        /* ── BACKGROUND IMAGE ── */
+        .dim-bg { position: relative; }
+        .dim-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('/static/backround.jpeg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.18);
+            z-index: 0;
+        }
+        .dim-bg > * { position: relative; z-index: 1; }
     </style>
 </head>
 <body>
@@ -135,7 +149,7 @@
 </section>
 
 <!-- ABOUT -->
-<section id="about" class="py-16 md:py-20 px-4 md:px-6 max-w-7xl mx-auto">
+<section id="about" class="dim-bg py-16 md:py-20 px-4 md:px-6 max-w-7xl mx-auto">
     <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
         <div class="glass p-7 md:p-10 rounded-[2rem]">
             <h3 class="text-3xl md:text-4xl font-black mb-5 italic text-pink-500">The Legacy</h3>
@@ -155,7 +169,7 @@
 </section>
 
 <!-- COURSES -->
-<section id="courses" class="py-16 md:py-20 px-4 md:px-6 bg-black/40">
+<section id="courses" class="dim-bg py-16 md:py-20 px-4 md:px-6">
     <div class="max-w-7xl mx-auto">
         <h2 class="text-center text-3xl md:text-4xl font-black mb-10 italic uppercase">The <span class="text-cyan-400">Curriculum</span></h2>
         <div id="dance-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"></div>
@@ -163,7 +177,7 @@
 </section>
 
 <!-- TESTIMONIALS -->
-<section id="testimonials" class="py-16 md:py-24 px-0 overflow-hidden" style="background: linear-gradient(to bottom, #000, #050505);">
+<section id="testimonials" class="dim-bg py-16 md:py-24 px-0 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 md:px-6">
         <h2 class="text-center text-3xl md:text-4xl font-black mb-2 italic uppercase">What Our <span class="text-pink-500">Dancers</span> Say</h2>
         <p class="text-center text-gray-500 text-xs mb-12 uppercase tracking-widest">Real students. Real journeys.</p>
@@ -195,7 +209,7 @@
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="py-16 md:py-20 px-4 md:px-6 bg-white/[0.02]">
+<section id="contact" class="dim-bg py-16 md:py-20 px-4 md:px-6">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 md:gap-12">
         <div>
             <h3 class="text-3xl md:text-4xl font-black mb-5 uppercase italic text-cyan-400">Elite Advantage</h3>
@@ -270,12 +284,10 @@
         <form id="enrollmentForm" class="space-y-3">
             <input type="text" id="name" placeholder="Full Name" required class="p-4 rounded-xl outline-none">
             <input type="email" id="email" placeholder="Email Address" required class="p-4 rounded-xl outline-none">
-            <!-- ✅ Phone: only digits, max 10 -->
             <input type="tel" id="phone" placeholder="Phone Number (10 digits)" required maxlength="10"
                 oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
                 class="p-4 rounded-xl outline-none">
             <div class="grid grid-cols-2 gap-3">
-                <!-- ✅ Age: max 2 digits, 1-99 only -->
                 <input type="number" id="age" placeholder="Age" min="1" max="99"
                     oninput="if(this.value.length>2)this.value=this.value.slice(0,2);if(parseInt(this.value)>99)this.value=99;if(parseInt(this.value)<1&&this.value!='')this.value=1"
                     class="p-4 rounded-xl outline-none">
@@ -293,11 +305,7 @@
 </div>
 
 <script>
-// ─── MOBILE MENU ─────────────────────────────────────────────
-function toggleMenu() {
-    document.getElementById('mobile-menu').classList.toggle('open');
-}
-
+function toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
 document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', function(e) {
         e.preventDefault();
@@ -305,90 +313,36 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 });
-
-// ─── SUPABASE INIT ────────────────────────────────────────────
 const SUPABASE_URL = "https://yhvnbwwxlkbccishcuue.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlodm5id3d4bGtiY2Npc2hjdXVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MjIyODksImV4cCI6MjA4ODE5ODI4OX0.F4TFa8Bh6APz25gasQN8JvGwcx5QZyTqr-UZxMUIug0";
 const SITE_URL = "https://web-production-93d2c.up.railway.app";
-
 const { createClient } = supabase;
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { persistSession: true, detectSessionInUrl: true }
-});
-
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, detectSessionInUrl: true } });
 let currentSession = null;
-
-supabaseClient.auth.getSession().then(({ data: { session } }) => {
-    currentSession = session;
-    updateAuthUI(session);
-    if (session) prefillForm(session.user);
-});
-
+supabaseClient.auth.getSession().then(({ data: { session } }) => { currentSession = session; updateAuthUI(session); if (session) prefillForm(session.user); });
 supabaseClient.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN') {
-        currentSession = session;
-        updateAuthUI(session);
-        prefillForm(session.user);
-        if (sessionStorage.getItem('pendingEnroll')) {
-            sessionStorage.removeItem('pendingEnroll');
-            document.getElementById('auth-gate').classList.add('hidden');
-            setTimeout(showEnroll, 400);
-        }
-    }
-    if (event === 'SIGNED_OUT') {
-        currentSession = null;
-        updateAuthUI(null);
-        document.getElementById('name').value  = '';
-        document.getElementById('email').value = '';
-    }
+    if (event === 'SIGNED_IN') { currentSession = session; updateAuthUI(session); prefillForm(session.user); if (sessionStorage.getItem('pendingEnroll')) { sessionStorage.removeItem('pendingEnroll'); document.getElementById('auth-gate').classList.add('hidden'); setTimeout(showEnroll, 400); } }
+    if (event === 'SIGNED_OUT') { currentSession = null; updateAuthUI(null); document.getElementById('name').value = ''; document.getElementById('email').value = ''; }
 });
-
-// ─── AUTH UI ──────────────────────────────────────────────────
 function updateAuthUI(session) {
-    const loginWrap   = document.getElementById('login-btn-wrap');
+    const loginWrap = document.getElementById('login-btn-wrap');
     const userDisplay = document.getElementById('user-display');
     if (session && session.user) {
         const meta = session.user.user_metadata || {};
         const displayName = meta.full_name || meta.name || session.user.email;
         const avatarUrl = meta.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(displayName) + '&background=ff007f&color=fff';
-        loginWrap.classList.add('hidden');
-        userDisplay.classList.remove('hidden');
-        document.getElementById('user-name').textContent         = displayName;
-        document.getElementById('user-avatar').src               = avatarUrl;
-        document.getElementById('enroll-avatar').src             = avatarUrl;
-        document.getElementById('enroll-user-name').textContent  = displayName;
+        loginWrap.classList.add('hidden'); userDisplay.classList.remove('hidden');
+        document.getElementById('user-name').textContent = displayName;
+        document.getElementById('user-avatar').src = avatarUrl;
+        document.getElementById('enroll-avatar').src = avatarUrl;
+        document.getElementById('enroll-user-name').textContent = displayName;
         document.getElementById('enroll-user-email').textContent = session.user.email;
-    } else {
-        loginWrap.classList.remove('hidden');
-        userDisplay.classList.add('hidden');
-    }
+    } else { loginWrap.classList.remove('hidden'); userDisplay.classList.add('hidden'); }
 }
-
-function prefillForm(user) {
-    const meta = user.user_metadata || {};
-    document.getElementById('name').value  = meta.full_name || meta.name || '';
-    document.getElementById('email').value = user.email || '';
-}
-
-async function signInWithGoogle() {
-    const { error } = await supabaseClient.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: SITE_URL + '/' }
-    });
-    if (error) alert('Sign-in error: ' + error.message);
-}
-
-function signInFromGate() {
-    sessionStorage.setItem('pendingEnroll', '1');
-    signInWithGoogle();
-}
-
-async function signOut() {
-    const { error } = await supabaseClient.auth.signOut();
-    if (error) console.error('Sign-out error:', error.message);
-}
-
-// ─── DANCE DATA ───────────────────────────────────────────────
+function prefillForm(user) { const meta = user.user_metadata || {}; document.getElementById('name').value = meta.full_name || meta.name || ''; document.getElementById('email').value = user.email || ''; }
+async function signInWithGoogle() { const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: SITE_URL + '/' } }); if (error) alert('Sign-in error: ' + error.message); }
+function signInFromGate() { sessionStorage.setItem('pendingEnroll', '1'); signInWithGoogle(); }
+async function signOut() { const { error } = await supabaseClient.auth.signOut(); if (error) console.error('Sign-out error:', error.message); }
 const danceData = {
     'Bharatanatyam': { icon:'🕉️', accent:'accent-pink',   fee:'₹2,500/mo', bg:'/static/bharatanatyam.jpeg', desc:'A major form of Indian classical dance that originated in Tamil Nadu. Known for its fixed upper torso, bent legs, and flexed knees combined with spectacular footwork.', mastery:['Hand Gestures (Mudras)','Facial Expressions (Abhinaya)','Rhythmic Patterns (Tala)','Traditional Arangetram Prep'] },
     'Hip Hop':       { icon:'👟', accent:'accent-cyan',    fee:'₹3,000/mo', bg:'/static/hiphop.jpeg',        desc:'Vibrant street dance styles primarily performed to hip-hop music. Covers foundation of urban movement and personal freestyle expression.', mastery:['Popping & Locking','Breaking Foundations','Choreography Memory','Freestyle Battle Tactics'] },
@@ -400,10 +354,8 @@ const danceData = {
     'Kuchipudi':     { icon:'✨', accent:'accent-orange',  fee:'₹2,500/mo', bg:'/static/kuchipudi.png',     desc:'One of the eight major Indian classical dances — a dance-drama rooted in the ancient Natya Shastra.', mastery:['Tarangam (Dancing on plate)','Dramatic Speech','Symmetry & Grace','Classical Literature'] },
     'Freestyle':     { icon:'🌀', accent:'accent-indigo',  fee:'₹2,800/mo', bg:'/static/freestyle.png',     desc:'Unrestricted, expressive movement drawn from multiple dance styles. Build your own unique performance identity.', mastery:['Improvisation','Style Fusion','Stage Confidence','Personal Choreography'] }
 };
-
-const grid        = document.getElementById('dance-grid');
+const grid = document.getElementById('dance-grid');
 const styleSelect = document.getElementById('dance_style');
-
 Object.keys(danceData).forEach(style => {
     const d = danceData[style];
     grid.innerHTML += `
@@ -414,176 +366,61 @@ Object.keys(danceData).forEach(style => {
         </div>`;
     styleSelect.innerHTML += `<option value="${style}">${style}</option>`;
 });
-
-// ─── MODALS ───────────────────────────────────────────────────
 function showDetails(style) {
     const d = danceData[style];
-    document.getElementById('detail-title').innerText       = style;
-    document.getElementById('detail-icon').innerText        = d.icon;
-    document.getElementById('detail-fee').innerText         = 'Tuition: ' + d.fee;
+    document.getElementById('detail-title').innerText = style;
+    document.getElementById('detail-icon').innerText = d.icon;
+    document.getElementById('detail-fee').innerText = 'Tuition: ' + d.fee;
     document.getElementById('detail-description').innerText = d.desc;
-    document.getElementById('detail-mastery').innerHTML     = d.mastery.map(i => `<li class="flex items-start gap-1">✅ ${i}</li>`).join('');
-    document.getElementById('dance_style').value            = style;
+    document.getElementById('detail-mastery').innerHTML = d.mastery.map(i => `<li class="flex items-start gap-1">✅ ${i}</li>`).join('');
+    document.getElementById('dance_style').value = style;
     document.getElementById('detail-modal-bg').style.backgroundImage = `url('${d.bg}')`;
     document.getElementById('detail-modal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
-
-function closeDetails() {
-    document.getElementById('detail-modal').classList.add('hidden');
-    document.body.style.overflow = '';
-}
-
+function closeDetails() { document.getElementById('detail-modal').classList.add('hidden'); document.body.style.overflow = ''; }
 function showEnroll() {
-    if (!currentSession) {
-        document.getElementById('auth-gate').classList.remove('hidden');
-        return;
-    }
+    if (!currentSession) { document.getElementById('auth-gate').classList.remove('hidden'); return; }
     updateAuthUI(currentSession);
     document.getElementById('enroll-modal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
-
-function closeEnroll() {
-    document.getElementById('enroll-modal').classList.add('hidden');
-    document.body.style.overflow = '';
-}
-
+function closeEnroll() { document.getElementById('enroll-modal').classList.add('hidden'); document.body.style.overflow = ''; }
 function switchToEnroll() { closeDetails(); showEnroll(); }
-
-// ─── ENROLL FORM ──────────────────────────────────────────────
 document.getElementById('enrollmentForm').onsubmit = async (e) => {
     e.preventDefault();
     const msg = document.getElementById('status-msg');
     const { data: { session } } = await supabaseClient.auth.getSession();
-
-    if (!session) {
-        msg.style.color = 'red';
-        msg.innerText = 'Session expired. Please sign in again.';
-        setTimeout(() => { closeEnroll(); document.getElementById('auth-gate').classList.remove('hidden'); }, 1500);
-        return;
-    }
-
-    // ✅ Phone validation
+    if (!session) { msg.style.color = 'red'; msg.innerText = 'Session expired. Please sign in again.'; setTimeout(() => { closeEnroll(); document.getElementById('auth-gate').classList.remove('hidden'); }, 1500); return; }
     const phoneVal = document.getElementById('phone').value.trim();
-    if (!/^\d{10}$/.test(phoneVal)) {
-        msg.style.color = 'red';
-        msg.innerText = 'Phone number must be exactly 10 digits.';
-        return;
-    }
-
-    // ✅ Age validation
+    if (!/^\d{10}$/.test(phoneVal)) { msg.style.color = 'red'; msg.innerText = 'Phone number must be exactly 10 digits.'; return; }
     const ageVal = document.getElementById('age').value;
-    if (ageVal && (parseInt(ageVal) < 1 || parseInt(ageVal) > 99)) {
-        msg.style.color = 'red';
-        msg.innerText = 'Please enter a valid age between 1 and 99.';
-        return;
-    }
-
-    msg.style.color = '#aaa';
-    msg.innerText = 'Processing...';
-
-    const payload = {
-        name:             document.getElementById('name').value.trim(),
-        email:            document.getElementById('email').value.trim(),
-        phone:            phoneVal,
-        age:              ageVal ? parseInt(ageVal) : null,
-        dance_style:      document.getElementById('dance_style').value,
-        experience_level: document.getElementById('experience_level').value
-    };
-
+    if (ageVal && (parseInt(ageVal) < 1 || parseInt(ageVal) > 99)) { msg.style.color = 'red'; msg.innerText = 'Please enter a valid age between 1 and 99.'; return; }
+    msg.style.color = '#aaa'; msg.innerText = 'Processing...';
+    const payload = { name: document.getElementById('name').value.trim(), email: document.getElementById('email').value.trim(), phone: phoneVal, age: ageVal ? parseInt(ageVal) : null, dance_style: document.getElementById('dance_style').value, experience_level: document.getElementById('experience_level').value };
     try {
-        const res = await fetch('/enroll', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.access_token}`
-            },
-            body: JSON.stringify(payload)
-        });
-
+        const res = await fetch('/enroll', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, body: JSON.stringify(payload) });
         const result = await res.json();
-
-        if (res.ok) {
-            msg.style.color = '#00f2ff';
-            msg.innerText = '🎉 Welcome to the Academy! Check your email for confirmation.';
-            setTimeout(() => {
-                document.getElementById('enrollmentForm').reset();
-                msg.innerText = '';
-                closeEnroll();
-            }, 3500);
-        } else {
-            msg.style.color = 'red';
-            msg.innerText = result.error || 'Submission failed. Please try again.';
-        }
-    } catch (err) {
-        console.error(err);
-        msg.style.color = 'red';
-        msg.innerText = 'Server error. Try again.';
-    }
+        if (res.ok) { msg.style.color = '#00f2ff'; msg.innerText = '🎉 Welcome to the Academy! Check your email for confirmation.'; setTimeout(() => { document.getElementById('enrollmentForm').reset(); msg.innerText = ''; closeEnroll(); }, 3500); }
+        else { msg.style.color = 'red'; msg.innerText = result.error || 'Submission failed. Please try again.'; }
+    } catch (err) { msg.style.color = 'red'; msg.innerText = 'Server error. Try again.'; }
 };
-
-// ─── CONTACT FORM ─────────────────────────────────────────────
 async function submitContactForm() {
-    const name    = document.getElementById('contact-name').value.trim();
-    const email   = document.getElementById('contact-email').value.trim();
+    const name = document.getElementById('contact-name').value.trim();
+    const email = document.getElementById('contact-email').value.trim();
     const message = document.getElementById('contact-message').value.trim();
-    const status  = document.getElementById('contact-status');
-
-    if (!name || !email || !message) {
-        status.style.color = 'red';
-        status.innerText = 'Please fill in all fields.';
-        return;
-    }
-
-    status.style.color = '#aaa';
-    status.innerText = 'Sending...';
-
+    const status = document.getElementById('contact-status');
+    if (!name || !email || !message) { status.style.color = 'red'; status.innerText = 'Please fill in all fields.'; return; }
+    status.style.color = '#aaa'; status.innerText = 'Sending...';
     try {
-        const res = await fetch('/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, message })
-        });
+        const res = await fetch('/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, message }) });
         const result = await res.json();
-        if (res.ok) {
-            status.style.color = '#00f2ff';
-            status.innerText = '✅ Message sent! A mentor will contact you soon.';
-            document.getElementById('contact-name').value    = '';
-            document.getElementById('contact-email').value   = '';
-            document.getElementById('contact-message').value = '';
-        } else {
-            status.style.color = 'red';
-            status.innerText = result.error || 'Failed to send. Try again.';
-        }
-    } catch (err) {
-        console.error("Contact form error:", err);
-        status.style.color = 'red';
-        status.innerText = 'Server error. Try again.';
-    }
+        if (res.ok) { status.style.color = '#00f2ff'; status.innerText = '✅ Message sent! A mentor will contact you soon.'; document.getElementById('contact-name').value = ''; document.getElementById('contact-email').value = ''; document.getElementById('contact-message').value = ''; }
+        else { status.style.color = 'red'; status.innerText = result.error || 'Failed to send. Try again.'; }
+    } catch (err) { status.style.color = 'red'; status.innerText = 'Server error. Try again.'; }
 }
-
-document.getElementById('detail-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeDetails();
-});
-document.getElementById('enroll-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeEnroll();
-});
+document.getElementById('detail-modal').addEventListener('click', function(e) { if (e.target === this) closeDetails(); });
+document.getElementById('enroll-modal').addEventListener('click', function(e) { if (e.target === this) closeEnroll(); });
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
