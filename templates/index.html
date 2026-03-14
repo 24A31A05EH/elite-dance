@@ -162,10 +162,20 @@
 </section>
 
 <!-- COURSES -->
-<section id="courses" class="py-16 md:py-20 px-4 md:px-6 bg-black/40">
+<section id="courses" class="py-16 md:py-20 px-4 md:px-6" style="background:linear-gradient(rgba(0,0,0,0.82),rgba(0,0,0,0.82)),url('/static/backround.jpeg') center/cover no-repeat;">
     <div class="max-w-7xl mx-auto">
         <h2 class="text-center text-3xl md:text-4xl font-black mb-10 italic uppercase">The <span class="text-cyan-400">Curriculum</span></h2>
-        <div id="dance-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"></div>
+        <div id="dance-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+            <div class="dance-card accent-pink p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('Bharatanatyam')"><div class="text-3xl md:text-4xl mb-3">🕉️</div><h4 class="text-lg md:text-2xl font-bold mb-1 italic">Bharatanatyam</h4><p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p></div>
+            <div class="dance-card accent-cyan p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('Hip Hop')"><div class="text-3xl md:text-4xl mb-3">👟</div><h4 class="text-lg md:text-2xl font-bold mb-1 italic">Hip Hop</h4><p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p></div>
+            <div class="dance-card accent-green p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('Kathak')"><div class="text-3xl md:text-4xl mb-3">🌪️</div><h4 class="text-lg md:text-2xl font-bold mb-1 italic">Kathak</h4><p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p></div>
+            <div class="dance-card accent-red p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('Salsa')"><div class="text-3xl md:text-4xl mb-3">💃</div><h4 class="text-lg md:text-2xl font-bold mb-1 italic">Salsa</h4><p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p></div>
+            <div class="dance-card accent-purple p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('Contemporary')"><div class="text-3xl md:text-4xl mb-3">🎭</div><h4 class="text-lg md:text-2xl font-bold mb-1 italic">Contemporary</h4><p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p></div>
+            <div class="dance-card accent-blue p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('Ballet')"><div class="text-3xl md:text-4xl mb-3">🩰</div><h4 class="text-lg md:text-2xl font-bold mb-1 italic">Ballet</h4><p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p></div>
+            <div class="dance-card accent-yellow p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('Western')"><div class="text-3xl md:text-4xl mb-3">🎷</div><h4 class="text-lg md:text-2xl font-bold mb-1 italic">Western</h4><p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p></div>
+            <div class="dance-card accent-orange p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('Kuchipudi')"><div class="text-3xl md:text-4xl mb-3">✨</div><h4 class="text-lg md:text-2xl font-bold mb-1 italic">Kuchipudi</h4><p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p></div>
+            <div class="dance-card accent-indigo p-5 md:p-8 rounded-2xl md:rounded-3xl" onclick="showDetails('Freestyle')"><div class="text-3xl md:text-4xl mb-3">🌀</div><h4 class="text-lg md:text-2xl font-bold mb-1 italic">Freestyle</h4><p class="text-gray-500 text-[10px] md:text-xs">Explore Syllabus & Fees</p></div>
+        </div>
     </div>
 </section>
 
@@ -208,46 +218,52 @@
         <p class="text-center text-gray-500 text-xs mb-12 uppercase tracking-widest">World-class choreographers. Personal mentors.</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
 
-            <div class="glass rounded-3xl p-6 flex flex-col items-center text-center border-t-4 border-pink-500 hover:scale-105 transition duration-300">
-                <div class="w-20 h-20 rounded-full mb-4 flex items-center justify-center text-2xl font-black" style="background:linear-gradient(135deg,#ff007f,#a855f7)">RP</div>
-                <h3 class="text-lg font-black text-white mb-1">Riya Patel</h3>
-                <p class="text-pink-500 text-xs font-bold uppercase tracking-widest mb-3">Bharatanatyam & Kuchipudi</p>
-                <p class="text-gray-400 text-xs leading-relaxed">15+ years of classical dance experience. Trained under Padma Shri awardees and performed at national cultural festivals across India.</p>
+            <div style="background:rgba(255,255,255,0.03);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.6rem 1.4rem;text-align:center;">
+                <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:white;background:linear-gradient(135deg,#ff007f,#a855f7);border:2px solid #ff007f;">RP</div>
+                <h3 style="font-size:15px;font-weight:900;color:white;margin-bottom:4px;">Riya Patel</h3>
+                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#ff007f;margin-bottom:0;">Bharatanatyam & Kuchipudi</p>
+                <div style="width:32px;height:2px;background:#ff007f;margin:10px auto;border-radius:2px;"></div>
+                <p style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">15+ years of classical dance experience. Trained under Padma Shri awardees and performed at national cultural festivals.</p>
             </div>
 
-            <div class="glass rounded-3xl p-6 flex flex-col items-center text-center border-t-4 border-cyan-400 hover:scale-105 transition duration-300">
-                <div class="w-20 h-20 rounded-full mb-4 flex items-center justify-center text-2xl font-black" style="background:linear-gradient(135deg,#00f2ff,#3b82f6)">AK</div>
-                <h3 class="text-lg font-black text-white mb-1">Aryan Khan</h3>
-                <p class="text-cyan-400 text-xs font-bold uppercase tracking-widest mb-3">Hip Hop & Freestyle</p>
-                <p class="text-gray-400 text-xs leading-relaxed">International street dance champion. Coached teams that won 3 consecutive national titles. Featured in music videos for top Bollywood artists.</p>
+            <div style="background:rgba(255,255,255,0.03);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.6rem 1.4rem;text-align:center;">
+                <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:white;background:linear-gradient(135deg,#00f2ff,#3b82f6);border:2px solid #00f2ff;">AK</div>
+                <h3 style="font-size:15px;font-weight:900;color:white;margin-bottom:4px;">Aryan Khan</h3>
+                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#00f2ff;margin-bottom:0;">Hip Hop & Freestyle</p>
+                <div style="width:32px;height:2px;background:#00f2ff;margin:10px auto;border-radius:2px;"></div>
+                <p style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">International street dance champion. Coached teams to 3 consecutive national titles. Featured in top Bollywood music videos.</p>
             </div>
 
-            <div class="glass rounded-3xl p-6 flex flex-col items-center text-center border-t-4 border-purple-500 hover:scale-105 transition duration-300">
-                <div class="w-20 h-20 rounded-full mb-4 flex items-center justify-center text-2xl font-black" style="background:linear-gradient(135deg,#a855f7,#f97316)">SM</div>
-                <h3 class="text-lg font-black text-white mb-1">Sneha Menon</h3>
-                <p class="text-purple-400 text-xs font-bold uppercase tracking-widest mb-3">Contemporary & Ballet</p>
-                <p class="text-gray-400 text-xs leading-relaxed">Trained at the Royal Academy of Dance, London. Brings a fusion of classical ballet discipline and expressive contemporary movement.</p>
+            <div style="background:rgba(255,255,255,0.03);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.6rem 1.4rem;text-align:center;">
+                <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:white;background:linear-gradient(135deg,#a855f7,#f97316);border:2px solid #a855f7;">SM</div>
+                <h3 style="font-size:15px;font-weight:900;color:white;margin-bottom:4px;">Sneha Menon</h3>
+                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#a855f7;margin-bottom:0;">Contemporary & Ballet</p>
+                <div style="width:32px;height:2px;background:#a855f7;margin:10px auto;border-radius:2px;"></div>
+                <p style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">Trained at the Royal Academy of Dance, London. Fusion of classical ballet discipline and expressive contemporary movement.</p>
             </div>
 
-            <div class="glass rounded-3xl p-6 flex flex-col items-center text-center border-t-4 border-orange-500 hover:scale-105 transition duration-300">
-                <div class="w-20 h-20 rounded-full mb-4 flex items-center justify-center text-2xl font-black" style="background:linear-gradient(135deg,#f97316,#eab308)">VR</div>
-                <h3 class="text-lg font-black text-white mb-1">Vikram Rao</h3>
-                <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-3">Salsa & Western</p>
-                <p class="text-gray-400 text-xs leading-relaxed">Latin dance specialist with 10+ years of performance and teaching. Represented India at the World Salsa Summit in Miami.</p>
+            <div style="background:rgba(255,255,255,0.03);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.6rem 1.4rem;text-align:center;">
+                <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:white;background:linear-gradient(135deg,#f97316,#eab308);border:2px solid #f97316;">VR</div>
+                <h3 style="font-size:15px;font-weight:900;color:white;margin-bottom:4px;">Vikram Rao</h3>
+                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#f97316;margin-bottom:0;">Salsa & Western</p>
+                <div style="width:32px;height:2px;background:#f97316;margin:10px auto;border-radius:2px;"></div>
+                <p style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">Latin dance specialist with 10+ years of performance and teaching. Represented India at the World Salsa Summit in Miami.</p>
             </div>
 
-            <div class="glass rounded-3xl p-6 flex flex-col items-center text-center border-t-4 border-green-500 hover:scale-105 transition duration-300">
-                <div class="w-20 h-20 rounded-full mb-4 flex items-center justify-center text-2xl font-black" style="background:linear-gradient(135deg,#22c55e,#00f2ff)">MJ</div>
-                <h3 class="text-lg font-black text-white mb-1">Meera Joshi</h3>
-                <p class="text-green-400 text-xs font-bold uppercase tracking-widest mb-3">Kathak</p>
-                <p class="text-gray-400 text-xs leading-relaxed">Disciple of the Lucknow Gharana. Known for mesmerizing chakkars and emotional abhinaya. Over 500 students trained across 8 years.</p>
+            <div style="background:rgba(255,255,255,0.03);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.6rem 1.4rem;text-align:center;">
+                <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:white;background:linear-gradient(135deg,#22c55e,#00f2ff);border:2px solid #22c55e;">MJ</div>
+                <h3 style="font-size:15px;font-weight:900;color:white;margin-bottom:4px;">Meera Joshi</h3>
+                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#22c55e;margin-bottom:0;">Kathak</p>
+                <div style="width:32px;height:2px;background:#22c55e;margin:10px auto;border-radius:2px;"></div>
+                <p style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">Disciple of the Lucknow Gharana. Known for mesmerizing chakkars and emotional abhinaya. Over 500 students trained.</p>
             </div>
 
-            <div class="glass rounded-3xl p-6 flex flex-col items-center text-center border-t-4 border-yellow-400 hover:scale-105 transition duration-300">
-                <div class="w-20 h-20 rounded-full mb-4 flex items-center justify-center text-2xl font-black" style="background:linear-gradient(135deg,#eab308,#ef4444)">DS</div>
-                <h3 class="text-lg font-black text-white mb-1">Dev Sharma</h3>
-                <p class="text-yellow-400 text-xs font-bold uppercase tracking-widest mb-3">Western & Hip Hop</p>
-                <p class="text-gray-400 text-xs leading-relaxed">Broadway-trained performer turned coach. Choreographed for TV reality shows and corporate events. Specializes in high-energy stage performances.</p>
+            <div style="background:rgba(255,255,255,0.03);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:1.6rem 1.4rem;text-align:center;">
+                <div style="width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:white;background:linear-gradient(135deg,#eab308,#ef4444);border:2px solid #eab308;">DS</div>
+                <h3 style="font-size:15px;font-weight:900;color:white;margin-bottom:4px;">Dev Sharma</h3>
+                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#eab308;margin-bottom:0;">Western & Hip Hop</p>
+                <div style="width:32px;height:2px;background:#eab308;margin:10px auto;border-radius:2px;"></div>
+                <p style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">Broadway-trained performer turned coach. Choreographed for TV reality shows and corporate events. High-energy stage specialist.</p>
             </div>
 
         </div>
@@ -262,7 +278,7 @@
             <p class="text-gray-400 mb-8 text-sm md:text-base">Our studios are equipped with professional shock-absorbent flooring, surround sound acoustics, and personalized feedback systems.</p>
             <div class="space-y-5">
                 <div class="flex items-start gap-4"><span class="text-2xl mt-1">📍</span><div><h5 class="font-bold text-sm">Main Studio</h5><p class="text-gray-500 text-sm">101 Elite Plaza, Bandra West, Mumbai</p></div></div>
-                <div class="flex items-start gap-4"><span class="text-2xl mt-1">✉️</span><div><h5 class="font-bold text-sm">Email Us</h5><p class="text-gray-500 text-sm">admissions@elitedance.com</p></div></div>
+                <div class="flex items-start gap-4"><span class="text-2xl mt-1">✉️</span><div><h5 class="font-bold text-sm">Email Us</h5><p class="text-gray-500 text-sm"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1170757c786262787e7f6251747d78657475707f72743f727e7c">[email&#160;protected]</a></p></div></div>
                 <div class="flex items-start gap-4"><span class="text-2xl mt-1">📞</span><div><h5 class="font-bold text-sm">Call Support</h5><p class="text-gray-500 text-sm">+91 90000 12345</p></div></div>
             </div>
         </div>
@@ -350,7 +366,7 @@
     </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 function toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
 document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', function(e) {
@@ -460,8 +476,4 @@ async function submitContactForm() {
         else { status.style.color = 'red'; status.innerText = result.error || 'Failed to send. Try again.'; }
     } catch (err) { status.style.color = 'red'; status.innerText = 'Server error. Try again.'; }
 }
-document.getElementById('detail-modal').addEventListener('click', function(e) { if (e.target === this) closeDetails(); });
-document.getElementById('enroll-modal').addEventListener('click', function(e) { if (e.target === this) closeEnroll(); });
-</script>
-</body>
-</html>
+document.getElementById('detail-mod
